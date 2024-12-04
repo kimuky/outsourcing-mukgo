@@ -19,7 +19,7 @@ public class StoreResponseDto {
     private StoreStatus status;
 
 
-    public static StoreResponseDto fromStore(Store store) {
+    public static StoreResponseDto toStore(Store store) {
         return new StoreResponseDto(
                 store.getId(),
                 store.getName(),
