@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 @RequestMapping("/stores")
@@ -70,4 +72,10 @@ public class StoreController {
 
         return ResponseEntity.ok().body(updateStore);
     }
+
+    @GetMapping("/{storeId}")
+    public ResponseEntity<StoreResponseDto> findStore(@PathVariable Long storeId) {
+         return ResponseEntity.ok().body(storeService.findStore(storeId));
+    }
+
 }
