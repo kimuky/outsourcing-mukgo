@@ -36,4 +36,7 @@ public class User extends BaseEntity {
         this.status = UserStatus.ACTIVATED;
         this.authority = requestDto.getAuthority();
     }
+
+    public User() {
+    }
 }
