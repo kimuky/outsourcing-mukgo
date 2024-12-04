@@ -35,6 +35,7 @@ public class StoreService {
         if(!loginUser.getAuthority().equals(Authority.OWNER)) {
             throw new CustomException(ErrorCode.NOT_FOUND_USER);
         }
+
         //가게 수 확인
         long activeStoreCount = storeRepository.countByUserAndStatusNot(loginUser, StoreStatus.CLOSURE);
         if(activeStoreCount >= 3) {
@@ -55,7 +56,7 @@ public class StoreService {
         );
         Store savedStore = storeRepository.save(store);
 
-        return StoreResponseDto.fromStore(savedStore);
+        return StoreResponseDto.toStore(savedStore);
     }
 
     /**
@@ -93,7 +94,7 @@ public class StoreService {
 
         Store updatedStore = storeRepository.save(findStore);
 
-        return StoreResponseDto.fromStore(updatedStore);
+        return StoreResponseDto.toStore(updatedStore);
 
     }
 
@@ -106,6 +107,6 @@ public class StoreService {
         // 가게 Id 확인
         Store findStore = storeRepository.findByOrElseThrow(storeId);
 
-        return StoreResponseDto.fromStore(findStore);
+        return StoreResponseDto.toStore(findStore);
     }
 }
