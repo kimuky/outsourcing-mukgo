@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.util.Objects;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +23,12 @@ public class StoreService {
     private final StoreRepository storeRepository;
     public final UserRepository userRepository;
 
+    /**
+     * 가게 생성
+     * @param requestDto
+     * @param loginUser
+     * @return
+     */
     public StoreResponseDto createStore(StoreRequestDto requestDto, User loginUser) {
 
         //권한 검증
@@ -52,6 +58,16 @@ public class StoreService {
         return StoreResponseDto.fromStore(savedStore);
     }
 
+    /**
+     * 가게 수정
+     * @param storeId
+     * @param loginUserId
+     * @param name
+     * @param minimumAmount
+     * @param openTime
+     * @param closeTime
+     * @return
+     */
     public StoreResponseDto updateStore(Long storeId, Long loginUserId, String name, Integer minimumAmount, LocalTime openTime, LocalTime closeTime) {
 
         Store findStore = storeRepository.findByOrElseThrow(storeId);
@@ -79,5 +95,17 @@ public class StoreService {
 
         return StoreResponseDto.fromStore(updatedStore);
 
+    }
+
+    /**
+     * 가게 단건 조회
+     * @param storeId
+     * @return
+     */
+    public StoreResponseDto findStore(Long storeId) {
+        // 가게 Id 확인
+        Store findStore = storeRepository.findByOrElseThrow(storeId);
+
+        return StoreResponseDto.fromStore(findStore);
     }
 }
