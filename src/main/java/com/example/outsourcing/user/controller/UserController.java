@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
-
+    // 회원가입
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponseDto> registerUser (@RequestBody UserRegisterRequestDto requestDto) {
         UserRegisterResponseDto registerUser = userService.registerUser(requestDto);
