@@ -9,13 +9,13 @@ import org.springframework.util.PatternMatchUtils;
 import java.io.IOException;
 
 @Slf4j
-public class CustomFilter implements Filter {
+public class UserFilter implements Filter {
 
     private static final String[] WHITE_LIST = {"/users/login", "/users/register"};
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse,
+                         FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         String requestURI = httpServletRequest.getRequestURI();
 
