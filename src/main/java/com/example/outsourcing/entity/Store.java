@@ -4,6 +4,8 @@ import com.example.outsourcing.status.StoreStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,6 +34,7 @@ public class Store extends BaseEntity {
     @Column(nullable = false)
     private LocalTime closeTime;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private StoreStatus status;
 

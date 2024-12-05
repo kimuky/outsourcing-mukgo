@@ -39,7 +39,7 @@ public class AdminController {
 
         StartEndDateDto dateDto = validateDate(startDate, endDate);
 
-        adminService.getStatics(loginUser, dateDto, storeId);
+//        adminService.getStatics(loginUser, dateDto, storeId);
         return null;
     }
 
