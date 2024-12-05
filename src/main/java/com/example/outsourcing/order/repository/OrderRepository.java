@@ -1,4 +1,4 @@
-package com.example.outsourcing.order;
+package com.example.outsourcing.order.repository;
 
 import com.example.outsourcing.entity.Orders;
 import com.example.outsourcing.entity.Store;

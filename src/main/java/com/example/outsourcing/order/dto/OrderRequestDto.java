@@ -1,4 +1,4 @@
-package com.example.outsourcing.order;
+package com.example.outsourcing.order.dto;
 
 import lombok.Getter;
 

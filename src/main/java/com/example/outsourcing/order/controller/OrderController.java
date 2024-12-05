@@ -1,11 +1,17 @@
-package com.example.outsourcing.order;
+package com.example.outsourcing.order.controller;
 
 import com.example.outsourcing.entity.User;
+import com.example.outsourcing.order.dto.OrderRequestDto;
+import com.example.outsourcing.order.dto.OrderResponseDto;
+import com.example.outsourcing.order.service.OrderService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -14,7 +20,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderController {
     private final OrderService orderService;
-    private OrderRepository orderRepository;
 
     // 주문 생성
     @PostMapping
