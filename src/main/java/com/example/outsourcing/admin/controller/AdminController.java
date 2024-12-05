@@ -1,6 +1,6 @@
 package com.example.outsourcing.admin.controller;
 
-import com.example.outsourcing.admin.dto.StartEndDateDto;
+import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
 import com.example.outsourcing.admin.service.AdminService;
 import com.example.outsourcing.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,14 +39,14 @@ public class AdminController {
         HttpSession session = servletRequest.getSession(false);
         User loginUser = (User) session.getAttribute("user");
 
-        StartEndDateDto dateDto = validateDate(startDate, endDate);
+        StartEndDateTimeDto dateDto = handlingDate(startDate, endDate);
 
         adminService.getStatics(loginUser, dateDto, storeId);
         return null;
     }
 
     // 날짜를 판별, 예외 핸들링하기 위함
-    private StartEndDateDto validateDate(LocalDate startDate, LocalDate endDate) {
+    private StartEndDateTimeDto handlingDate(LocalDate startDate, LocalDate endDate) {
         // 예외처리를 하지않고 예외를 전환
         if (startDate.isAfter(endDate) || startDate.isEqual(endDate)) {
             // 조회 호출 시, 날짜를 기준으로 그 달의 첫날
@@ -53,8 +55,10 @@ public class AdminController {
             // 조회 호출 시, 날짜를 기준으로 그 달의 마지막날
             endDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
         }
+        // LocalDate to LocalDateTime
+        LocalDateTime startOfDay = startDate.atStartOfDay(); // ex) 00:00:00
+        LocalDateTime endOfDay = endDate.atTime(LocalTime.MAX);// ex) 23:59:59.99999
 
-        // dto 로 반환
-        return new StartEndDateDto(startDate, endDate);
+        return new StartEndDateTimeDto(startOfDay, endOfDay);
     }
 }
