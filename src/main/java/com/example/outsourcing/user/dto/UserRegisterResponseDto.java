@@ -10,9 +10,13 @@ import java.time.LocalDateTime;
 public class UserRegisterResponseDto {
 
     private final Long id;
+
     private final String email;
+
     private final String nickname;
+
     private final Authority authority;
+
     private final LocalDateTime createdAt;
 
     public UserRegisterResponseDto(User user) {
