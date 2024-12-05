@@ -2,14 +2,14 @@ package com.example.outsourcing.user.service;
 
 import com.example.outsourcing.config.PasswordEncoder;
 import com.example.outsourcing.entity.User;
+import com.example.outsourcing.error.errorcode.ErrorCode;
+import com.example.outsourcing.error.exception.CustomException;
 import com.example.outsourcing.user.dto.UserLoginRequestDto;
 import com.example.outsourcing.user.dto.UserRegisterRequestDto;
 import com.example.outsourcing.user.dto.UserRegisterResponseDto;
 import com.example.outsourcing.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +19,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public UserRegisterResponseDto registerUser(UserRegisterRequestDto requestDto) {
+
+        // 이메일 중복 검사
+        if(userRepository.findUserByEmail(requestDto.getEmail()).isPresent()) {
+            throw new CustomException(ErrorCode.INVALID_EMAIL);
+        }
 
         // 패스워드 인코딩
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
@@ -35,7 +40,7 @@ public class UserService {
 
         // 패스워드가 같은지 확인
         if (!passwordEncoder.matches(requestDto.getPassword(), findUser.getPassword())) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
         }
 
         return findUser;
