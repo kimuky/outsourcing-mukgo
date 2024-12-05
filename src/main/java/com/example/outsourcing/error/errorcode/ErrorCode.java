@@ -26,6 +26,7 @@ public enum ErrorCode {
 
     // 400 Bad Request
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "잘못된 요청입니다."),
+    BAD_REQUEST_YEAR_MONTH(HttpStatus.BAD_REQUEST, "년월을 제대로 입력해주세요"),
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
