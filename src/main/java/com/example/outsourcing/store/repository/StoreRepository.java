@@ -12,7 +12,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -56,9 +55,9 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     List<StoreResponseDto> findByMyStore(@Param("user_id") Long userId);
 
 
-    default Store findByOrElseThrow(Long storeId) {
+    default Store findByStoreOrElseThrow(Long storeId) {
         return findById(storeId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_STORE)
+                () -> new CustomException(ErrorCode.STORE_NOT_FOUND)
         );
     }
 

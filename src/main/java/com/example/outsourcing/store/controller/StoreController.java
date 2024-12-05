@@ -10,10 +10,9 @@ import com.example.outsourcing.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.GetExchange;
+
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class StoreController {
             @PathVariable Long storeId,
             HttpServletRequest request) {
 
-        Store findStore = storeRepository.findByOrElseThrow(storeId);
+        Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data

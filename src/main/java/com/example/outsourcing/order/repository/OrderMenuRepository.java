@@ -8,6 +8,4 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrderMenuRepository extends JpaRepository<OrderMenu, OrderMenuId> {
 
-//    @Query("SELECT order_menu o FROM order_menu WHERE o.ordersId = :orderId")
-//    List<OrderMenu> findAllByOrderId(@Param("orderId") Long orderId);
 }
