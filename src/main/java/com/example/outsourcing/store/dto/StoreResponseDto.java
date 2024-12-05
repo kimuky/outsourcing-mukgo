@@ -1,14 +1,12 @@
 package com.example.outsourcing.store.dto;
 
-import com.example.outsourcing.entity.Menu;
+
 import com.example.outsourcing.entity.Store;
-import com.example.outsourcing.menu.dto.MenuResponseDto;
 import com.example.outsourcing.status.StoreStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
 import java.time.LocalTime;
-import java.util.List;
+
 
 @Getter
 @AllArgsConstructor
@@ -32,5 +30,4 @@ public class StoreResponseDto {
                 store.getStatus()
         );
     }
-
 }
