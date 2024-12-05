@@ -1,11 +1,13 @@
 package com.example.outsourcing.store.service;
 
+import com.example.outsourcing.entity.Menu;
 import com.example.outsourcing.entity.Store;
 import com.example.outsourcing.entity.User;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
 import com.example.outsourcing.menu.dto.MenuResponseDto;
 import com.example.outsourcing.status.Authority;
+import com.example.outsourcing.status.MenuStatus;
 import com.example.outsourcing.status.StoreStatus;
 import com.example.outsourcing.store.dto.StoreMenuResponseDto;
 import com.example.outsourcing.store.dto.StoreRequestDto;
@@ -37,18 +39,18 @@ public class StoreService {
 
         //권한 검증
         if(!loginUser.getAuthority().equals(Authority.OWNER)) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
         }
 
         //가게 수 확인
         long activeStoreCount = storeRepository.countByUserAndStatusNot(loginUser, StoreStatus.CLOSURE);
         if(activeStoreCount >= 3) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.NOT_CREATE_STORE);
         }
 
         //오픈 시간, 마감 시간
         if(requestDto.getOpenTime().isAfter(requestDto.getCloseTime())) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.OPEN_AND_CLOSE);
         }
 
         Store store = new Store(
@@ -75,20 +77,20 @@ public class StoreService {
      */
     public StoreResponseDto updateStore(Long storeId, Long loginUserId, String name, Integer minimumAmount, LocalTime openTime, LocalTime closeTime) {
 
-        Store findStore = storeRepository.findByOrElseThrow(storeId);
+        Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
         //가게 ID 확인
         if(findStore.getId() == null) {
-            throw new CustomException(ErrorCode.NOT_FOUND_STORE);
+            throw new CustomException(ErrorCode.STORE_NOT_FOUND);
         }
 
         //본인의 가게 검증
         if(!findStore.getUser().getId().equals(loginUserId)) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.FORBIDDEN_OWNER);
         }
 
         if(name == null || minimumAmount == null || openTime == null || closeTime == null) {
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.BAD_REQUEST);
         }
 
         findStore.updateStore(name, minimumAmount, openTime, closeTime);
@@ -106,23 +108,26 @@ public class StoreService {
 //     */
     public StoreMenuResponseDto findStore(Long storeId, User loginUser) {
         // 가게 Id 확인
-        Store findStore = storeRepository.findByOrElseThrow(storeId);
+        Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
         if(findStore.getStatus() == StoreStatus.CLOSURE){
             if(loginUser.getAuthority() != Authority.OWNER || !findStore.getUser().getId().equals(loginUser.getId())) {
-                throw new CustomException(ErrorCode.NOT_FOUND_STORE);
+                throw new CustomException(ErrorCode.STORE_NOT_FOUND);
             }
         }
 
         // 엔티티 -> Dto 변환
-        List<MenuResponseDto> menuDtos = findStore.getMenus().stream()
-                .map(menu -> new MenuResponseDto(
+        List<MenuResponseDto> menuDtos = new ArrayList<>();
+        for (Menu menu : findStore.getMenus()) {
+            if (menu.getStatus() != MenuStatus.DELETED) {
+                menuDtos.add(new MenuResponseDto(
                         menu.getId(),
                         menu.getMenuName(),
                         menu.getPrice(),
                         menu.getStatus()
-                )).toList();
-
+                ));
+            }
+        }
 
         return StoreMenuResponseDto.fromStoreMenu(findStore, menuDtos);
     }
@@ -150,11 +155,11 @@ public class StoreService {
     @Transactional
     public void closeStore(Long storeId, Long userId) {
         //가게 조회
-        Store findStore = storeRepository.findByOrElseThrow(storeId);
+        Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
         //사용자 검증
         if(!findStore.getUser().getId().equals(userId)){
-            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+            throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
         }
 
         // 상태 토글
