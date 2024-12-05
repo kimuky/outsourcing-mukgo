@@ -28,9 +28,9 @@ public class Menu extends BaseEntity {
     public Menu() {
     }
 
-    public Menu(Store store, String manuName, Integer price, MenuStatus status) {
+    public Menu(Store store, String menuName, Integer price, MenuStatus status) {
         this.store = store;
-        this.menuName = manuName;
+        this.menuName = menuName;
         this.price = price;
         this.status = status;
 

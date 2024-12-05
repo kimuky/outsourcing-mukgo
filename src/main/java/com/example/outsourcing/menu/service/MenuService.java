@@ -36,6 +36,6 @@ public class MenuService {
 
         Menu savedMenu = menuRepository.save(menu);
 
-        return MenuResponseDto.toMene(savedMenu);
+        return MenuResponseDto.toMenu(savedMenu);
     }
 }

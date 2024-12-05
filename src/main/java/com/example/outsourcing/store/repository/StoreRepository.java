@@ -29,8 +29,31 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
     @Query("SELECT new com.example.outsourcing.store.dto.StoreResponseDto( " +
             "s.id, s.name, s.minimumAmount, s.openTime, s.closeTime, s.status) " +
             "FROM store s " +
-            "WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%'))")
-    List<StoreResponseDto> findByNameContainingIgnoreCase(@Param("name") String name);
+            "WHERE (LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')) AND user.id != :user_id AND s.status = 'OPEN')" +
+            "OR (LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')) AND user.id = :user_id)")
+    List<StoreResponseDto> findByStoreAndNotUser(@Param("name") String name , @Param("user_id") Long userId);
+
+    /**
+     * 고객이 오픈인 가게만 조회되는 쿼리
+     * @param name
+     * @return
+     */
+    @Query("SELECT new com.example.outsourcing.store.dto.StoreResponseDto( " +
+            "s.id, s.name, s.minimumAmount, s.openTime, s.closeTime, s.status) " +
+            "FROM store s " +
+            "WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :name, '%')) AND s.status = 'OPEN'")
+    List<StoreResponseDto> findByStoreAndUser(@Param("name") String name);
+
+    /**
+     * 본인 가게 조회 쿼리
+     * @param userId
+     * @return
+     */
+    @Query("SELECT new com.example.outsourcing.store.dto.StoreResponseDto( " +
+            "s.id, s.name, s.minimumAmount, s.openTime, s.closeTime, s.status) " +
+            "FROM store s " +
+            "WHERE s.user.id = :userId")
+    List<StoreResponseDto> findByMyStore(@Param("user_id") Long userId);
 
 
     default Store findByOrElseThrow(Long storeId) {
@@ -38,5 +61,6 @@ public interface StoreRepository extends JpaRepository<Store, Long> {
                 () -> new CustomException(ErrorCode.NOT_FOUND_STORE)
         );
     }
+
 
 }

@@ -14,8 +14,10 @@ import com.example.outsourcing.store.repository.StoreRepository;
 import com.example.outsourcing.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,10 +76,6 @@ public class StoreService {
     public StoreResponseDto updateStore(Long storeId, Long loginUserId, String name, Integer minimumAmount, LocalTime openTime, LocalTime closeTime) {
 
         Store findStore = storeRepository.findByOrElseThrow(storeId);
-//        Long storeUserId = findStore.getUser().getId();
-//
-//        User findUser = userRepository.findById(loginUserId).orElseThrow(
-//                () -> new CustomException(ErrorCode.NOT_FOUND_USER));
 
         //가게 ID 확인
         if(findStore.getId() == null) {
@@ -106,9 +104,15 @@ public class StoreService {
 //     * @param storeId
 //     * @return
 //     */
-    public StoreMenuResponseDto findStore(Long storeId) {
+    public StoreMenuResponseDto findStore(Long storeId, User loginUser) {
         // 가게 Id 확인
         Store findStore = storeRepository.findByOrElseThrow(storeId);
+
+        if(findStore.getStatus() == StoreStatus.CLOSURE){
+            if(loginUser.getAuthority() != Authority.OWNER || !findStore.getUser().getId().equals(loginUser.getId())) {
+                throw new CustomException(ErrorCode.NOT_FOUND_STORE);
+            }
+        }
 
         // 엔티티 -> Dto 변환
         List<MenuResponseDto> menuDtos = findStore.getMenus().stream()
@@ -129,9 +133,48 @@ public class StoreService {
      * @param name
      * @return
      */
+    public List<StoreResponseDto> SearchStoreByName(String name, User loginUser) {
 
-    public List<StoreResponseDto> SearchStoreByName(String name) {
+        if(loginUser.getAuthority() != Authority.USER) {
+            return storeRepository.findByStoreAndNotUser(name, loginUser.getId());
+        }
 
-        return storeRepository.findByNameContainingIgnoreCase(name);
+        return storeRepository.findByStoreAndUser(name);
+    }
+
+    /**
+     * 가게 폐업 변경
+     * @param storeId
+     * @param userId
+     */
+    @Transactional
+    public void closeStore(Long storeId, Long userId) {
+        //가게 조회
+        Store findStore = storeRepository.findByOrElseThrow(storeId);
+
+        //사용자 검증
+        if(!findStore.getUser().getId().equals(userId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_USER);
+        }
+
+        // 상태 토글
+        if (findStore.getStatus() == StoreStatus.OPEN) {
+            findStore.setStatus(StoreStatus.CLOSURE);
+        } else {
+            findStore.setStatus(StoreStatus.OPEN);
+        }
+
+    }
+
+    /**
+     *  본인 가게만 조회
+     * @param loginUser
+     * @return
+     */
+    public List<StoreResponseDto> findMyStore(User loginUser) {
+
+        // 본인 가게 조회
+        return storeRepository.findByMyStore(loginUser.getId());
+
     }
 }
