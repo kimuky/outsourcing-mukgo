@@ -29,8 +29,7 @@ public class Orders extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private OrderStep step;
 
-    @OneToMany
-    @JoinColumn(name = "order_menu_id")
+    @OneToMany(mappedBy = "ordersId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderMenu> orderMenu = new ArrayList<>();
 
     public Orders() {
