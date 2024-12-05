@@ -27,4 +27,12 @@ public class Review extends BaseEntity{
 
     public Review() {
     }
+
+    public Review(User user, Orders ordersId, String comment, Integer rating) {
+        this.user = user;
+        this.ordersId = ordersId;
+        this.comment = comment;
+        this.rating = rating;
+    }
+
 }
