@@ -62,13 +62,9 @@ public class AdminController {
             @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear}") Integer year,
             @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getMonthValue()}") Integer month) {
-        // 현재 날짜
-        LocalDate currentDate = LocalDate.now();
-        // 현재 날짜의 달의 일 수
-        int lengthOfMonth = currentDate.lengthOfMonth();
 
         // 연도와 달을 검사
-        if ((year < LocalDate.MIN.getYear() || year > LocalDate.MAX.getYear()) || (month > lengthOfMonth || month < 1)) {
+        if ((year < LocalDate.MIN.getYear() || year > LocalDate.MAX.getYear()) || (month > 12 || month < 1)) {
             throw new CustomException(ErrorCode.BAD_REQUEST_YEAR_MONTH);
         }
 
