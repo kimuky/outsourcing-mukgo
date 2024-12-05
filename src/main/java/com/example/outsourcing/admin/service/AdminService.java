@@ -1,6 +1,6 @@
 package com.example.outsourcing.admin.service;
 
-import com.example.outsourcing.admin.dto.AllStaticsResponseDto;
+import com.example.outsourcing.admin.dto.BetweenStaticsResponseDto;
 import com.example.outsourcing.admin.dto.DailyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.MonthlyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
@@ -25,7 +25,7 @@ public class AdminService {
         return userRepositoryImpl.getMonthlyStatics(storeId, year, month);
     }
 
-    public List<AllStaticsResponseDto> getStaticsAll(StartEndDateTimeDto dateDto) {
-        return userRepositoryImpl.getAllStatics(dateDto);
+    public List<BetweenStaticsResponseDto> getStaticsBetween(Long storeId, StartEndDateTimeDto dateDto) {
+        return userRepositoryImpl.getStaticsBetween(storeId, dateDto);
     }
 }

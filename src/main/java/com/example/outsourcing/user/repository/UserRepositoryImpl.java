@@ -1,6 +1,6 @@
 package com.example.outsourcing.user.repository;
 
-import com.example.outsourcing.admin.dto.AllStaticsResponseDto;
+import com.example.outsourcing.admin.dto.BetweenStaticsResponseDto;
 import com.example.outsourcing.admin.dto.DailyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.MonthlyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
@@ -85,17 +85,19 @@ public class UserRepositoryImpl {
      * nativeQuery example -> SELECT count(1), SUM(total_price), 2024.05.21, 2024.05.31
      * FROM orders WHERE createdAt BETWEEN 2024.05.21 AND 2024.05.31
      * GROUP BY store_id;
+     *
+     * @param storeId 가게 id
      * @param dateDto 원하는 시작 날짜, 원하는 마지막 날짜를 담고있는 dto
      * @return 가게 id, 주문 건수, 주문 총액, 원하는 시작날짜, 원하는 마지막날짜
      */
-    public List<AllStaticsResponseDto> getAllStatics(StartEndDateTimeDto dateDto) {
+    public List<BetweenStaticsResponseDto> getStaticsBetween(Long storeId, StartEndDateTimeDto dateDto) {
         return jpaQueryFactory.select(
-                Projections.constructor(AllStaticsResponseDto.class,
+                Projections.constructor(BetweenStaticsResponseDto.class,
                         orders.store.id, orders.count(), orders.totalPrice.sum(),
                         Expressions.constant(dateDto.getStartDate()),
                         Expressions.constant(dateDto.getEndDate())))
                 .from(orders)
-                .where(orders.createdAt.between(dateDto.getStartDate(), dateDto.getEndDate()))
+                .where(orders.createdAt.between(dateDto.getStartDate(), dateDto.getEndDate()), storeEquals(storeId))
                 .groupBy(store.id).fetch();
     }
 }

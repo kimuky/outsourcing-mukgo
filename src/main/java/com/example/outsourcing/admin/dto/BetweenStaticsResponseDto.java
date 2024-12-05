@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @RequiredArgsConstructor
-public class AllStaticsResponseDto {
+public class BetweenStaticsResponseDto {
 
     private final Long storeId;
 

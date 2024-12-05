@@ -1,6 +1,6 @@
 package com.example.outsourcing.admin.controller;
 
-import com.example.outsourcing.admin.dto.AllStaticsResponseDto;
+import com.example.outsourcing.admin.dto.BetweenStaticsResponseDto;
 import com.example.outsourcing.admin.dto.DailyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.MonthlyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
@@ -35,8 +35,9 @@ public class AdminController {
      * 해당 날의 주문 건수, 주문 총액을 확인 가능
      * 가게 id 를 입력하지 않으면 해당 날의 모든 가게 통계 데이터를 확인 가능
      * date 를 입력하지 않으면 컨트롤러를 실행시킨 날짜로 default value
+     *
      * @param storeId 가게 id
-     * @param date 원하는 날짜 ex) 2024-12-05
+     * @param date    원하는 날짜 ex) 2024-12-05
      * @return 주문 건수, 주문 총액, 파라미터로 입력한 날짜
      */
     @GetMapping("/statics/daily")
@@ -50,15 +51,17 @@ public class AdminController {
 
     /**
      * 모든 가게를 달별로 주문건수, 주문 총액을 확인 가능
+     *
      * @param storeId 가게 id
-     * @param year 원하는 연도
-     * @param month 원하는 달
+     * @param year    원하는 연도
+     * @param month   원하는 달
      * @return 가게 id, 주문 건수, 주문 총액, 해당 연도 달의 첫날, 해당 연도 달의 첫날 마지막날
      */
     @GetMapping("/statics/monthly")
-    public ResponseEntity<List<MonthlyStaticsResponseDto>> getMonthlyStatics(@RequestParam(required = false) Long storeId,
-                                               @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear}") Integer year,
-                                               @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getMonthValue()}") Integer month) {
+    public ResponseEntity<List<MonthlyStaticsResponseDto>> getMonthlyStatics(
+            @RequestParam(required = false) Long storeId,
+            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getYear}") Integer year,
+            @RequestParam(defaultValue = "#{T(java.time.LocalDate).now().getMonthValue()}") Integer month) {
         // 현재 날짜
         LocalDate currentDate = LocalDate.now();
         // 현재 날짜의 달의 일 수
@@ -75,19 +78,22 @@ public class AdminController {
     }
 
     /**
-     * 모든 가게의 통계를 조회
+     * 원하는 날짜 사이 통계를 조회
+     *
+     * @param storeId 가게 id
      * @param startDate 원하는 시작 날짜
-     * @param endDate 원하는 마지막 날짜
+     * @param endDate   원하는 마지막 날짜
      * @return 가게 id, 주문 건수, 주문 총액, 원하는 시작 날짜, 원하는 마지막 날짜
      */
-    @GetMapping("/statics/all")
-    public ResponseEntity<List<AllStaticsResponseDto>> getStaticsByStore(
+    @GetMapping("/statics/between")
+    public ResponseEntity<List<BetweenStaticsResponseDto>> getStaticsBetween(
+            @RequestParam(required = false) Long storeId,
             @RequestParam(defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate startDate,
             @RequestParam(defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate endDate) {
 
         StartEndDateTimeDto dateDto = handlingDate(startDate, endDate);
 
-        List<AllStaticsResponseDto> staticsAll = adminService.getStaticsAll(dateDto);
+        List<BetweenStaticsResponseDto> staticsAll = adminService.getStaticsBetween(storeId, dateDto);
         return ResponseEntity.status(HttpStatus.OK).body(staticsAll);
     }
 
@@ -102,7 +108,7 @@ public class AdminController {
             endDate = LocalDate.now().withDayOfMonth(LocalDate.now().lengthOfMonth());
         }
         // LocalDate to LocalDateTime
-        LocalDateTime startOfDay = startDate.atStartOfDay(); // ex) 00:00:00
+        LocalDateTime startOfDay = startDate.atTime(LocalTime.MIN); // ex) 00:00:00
         LocalDateTime endOfDay = endDate.atTime(LocalTime.MAX); // ex) 23:59:59.99999
 
         return new StartEndDateTimeDto(startOfDay, endOfDay);
