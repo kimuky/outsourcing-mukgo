@@ -19,11 +19,12 @@ public class OwnerFilter implements Filter {
         String requestURI = httpServletRequest.getRequestURI();
         log.info(requestURI);
 
-        // 유저 세션을 가져와서 권한을 확인
         HttpSession session = httpServletRequest.getSession(false);
-        User user = (User) session.getAttribute("user");
 
+        // 유저 세션을 가져와서 권한을 확인
+        User user = (User) session.getAttribute("user");
         String method = ((HttpServletRequest) servletRequest).getMethod();
+
         // 유저는 get 만 허용
         if (!method.equals("GET") && user.getAuthority().equals(Authority.USER) ) {
             throw new RuntimeException("일반 유저는 보기만 허용됩니다.");
