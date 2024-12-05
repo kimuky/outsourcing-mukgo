@@ -19,7 +19,7 @@ public class MenuResponseDto {
     public static MenuResponseDto toMene(Menu menu) {
         return new MenuResponseDto(
                 menu.getId(),
-                menu.getMuneName(),
+                menu.getMenuName(),
                 menu.getPrice(),
                 menu.getStatus()
         );

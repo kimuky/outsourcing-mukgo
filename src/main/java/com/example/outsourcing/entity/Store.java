@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity(name = "store")
@@ -32,6 +34,9 @@ public class Store extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private StoreStatus status;
+
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Menu> menus = new ArrayList<>();
 
     public Store(User user, String name, Integer minimumAmount, LocalTime openTime, LocalTime closeTime) {
         this.user = user;

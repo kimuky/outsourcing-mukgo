@@ -2,6 +2,7 @@ package com.example.outsourcing.store.controller;
 
 import com.example.outsourcing.entity.Store;
 import com.example.outsourcing.entity.User;
+import com.example.outsourcing.store.dto.StoreMenuResponseDto;
 import com.example.outsourcing.store.dto.StoreRequestDto;
 import com.example.outsourcing.store.dto.StoreResponseDto;
 import com.example.outsourcing.store.repository.StoreRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 
@@ -73,9 +75,28 @@ public class StoreController {
         return ResponseEntity.ok().body(updateStore);
     }
 
+    /**
+     * 가게 단건 조회
+     * @param storeId
+     * @return
+     */
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreResponseDto> findStore(@PathVariable Long storeId) {
-         return ResponseEntity.ok().body(storeService.findStore(storeId));
+    public ResponseEntity<StoreMenuResponseDto> findStore(@PathVariable Long storeId) {
+
+        StoreMenuResponseDto responseDto = storeService.findStore(storeId);
+        return ResponseEntity.ok(responseDto);
     }
+
+
+    @GetMapping
+    public ResponseEntity<List<StoreResponseDto>> SearchStoreByName(
+            @RequestParam(value = "name", required = false) String name
+    ) {
+
+        List<StoreResponseDto> responseDtoList = storeService.SearchStoreByName(name);
+        return ResponseEntity.ok().body(responseDtoList);
+    }
+
+
 
 }
