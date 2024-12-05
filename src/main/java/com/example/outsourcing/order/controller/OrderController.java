@@ -8,10 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,21 +31,23 @@ public class OrderController {
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
-//    // 주문 단건 조회
-//    @GetMapping("/{orderId}")
-//    public ResponseEntity<OrderResponseDto> getOrderId(@PathVariable Long orderId) {
-//
-//        OrderResponseDto findOrder = orderService.getOrderId(orderId);
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(findOrder);
-//    }
-//
-//    // 주문 전체 조회
-//    @GetMapping
-//    public ResponseEntity<List<OrderResponseDto>> getOrders() {
-//
-//        List<OrderResponseDto> orders = orderService.getOrders();
-//
-//        return  ResponseEntity.status(HttpStatus.OK).body(orders);
-//    }
+    // 주문 단건 조회
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponseDto> getOrderId(@PathVariable Long orderId) {
+
+        OrderResponseDto findOrder = orderService.getOrderId(orderId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(findOrder);
+    }
+
+    // 주문 전체 조회
+    @GetMapping
+    public ResponseEntity<List<OrderResponseDto>> getOrders(HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        List<OrderResponseDto> orders = orderService.getOrders(user);
+
+        return  ResponseEntity.status(HttpStatus.OK).body(orders);
+    }
 }
