@@ -8,6 +8,7 @@ import com.example.outsourcing.status.OrderStep;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,10 +19,11 @@ public class OrderService {
     private MenuRepository menuRepository;
 
     // 주문 생성
-    public void postOrder(User user, List<OrderRequestDto> orderRequestDtos) {
+    public OrderResponseDto postOrder(User user, List<OrderRequestDto> orderRequestDtos) {
 
         Orders order = new Orders(user, OrderStep.ORDER_COMPLETED);
         Orders savedOrder = orderRepository.save(order);
+        List<OrderDto> orderMenus = new ArrayList<>();
 
         int totalPrice = 0;
 
@@ -36,13 +38,19 @@ public class OrderService {
             OrderMenuId orderMenuId = new OrderMenuId(savedOrder.getId(), orderRequestDto.getMenuId());
             OrderMenu orderMenu = new OrderMenu(orderMenuId, savedOrder, menu, orderRequestDto.getCount());
 
-            orderMenuRepository.save(orderMenu);
+            OrderMenu savedOrderMenu = orderMenuRepository.save(orderMenu);
+            OrderDto orderDto = new OrderDto(savedOrderMenu.getMenuId().getId(), savedOrderMenu.getMenuId().getMenuName(), savedOrderMenu.getFoodCount());
+            orderMenus.add(orderDto);
         }
 
         orderRepository.updateTotalPrice(totalPrice, user);
 
-
-        // 여기부터 Response body 만드는 로직
+        return OrderResponseDto.builder()
+                .id(savedOrder.getId())
+                .order(orderMenus)
+                .totalPrice(totalPrice)
+                .createdAt(savedOrder.getCreatedAt())
+                .build();
 
     }
 

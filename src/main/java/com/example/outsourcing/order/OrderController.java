@@ -18,17 +18,15 @@ public class OrderController {
 
     // 주문 생성
     @PostMapping
-    public ResponseEntity<Void> postOrder(
+    public ResponseEntity<OrderResponseDto> postOrder(
             @RequestBody List<OrderRequestDto> orderRequestDtos,
             HttpSession session
     ) {
 
         User user = (User) session.getAttribute("user");
 
-//        OrderResponseDto orderResponseDto = orderService.postOrder(user, orderRequestDtos);
-        orderService.postOrder(user, orderRequestDtos);
-//        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
-        return ResponseEntity.status(HttpStatus.OK).build();
+        OrderResponseDto orderResponseDto = orderService.postOrder(user, orderRequestDtos);
+        return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
     }
 
 //    // 주문 단건 조회
