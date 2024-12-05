@@ -1,9 +1,14 @@
-package com.example.outsourcing.order;
+package com.example.outsourcing.order.service;
 
 import com.example.outsourcing.entity.*;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
 import com.example.outsourcing.menu.repository.MenuRepository;
+import com.example.outsourcing.order.dto.OrderDto;
+import com.example.outsourcing.order.dto.OrderRequestDto;
+import com.example.outsourcing.order.dto.OrderResponseDto;
+import com.example.outsourcing.order.repository.OrderMenuRepository;
+import com.example.outsourcing.order.repository.OrderRepository;
 import com.example.outsourcing.status.OrderStep;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -60,11 +65,20 @@ public class OrderService {
 
     }
 
-//    // 주문 단건 조회
+    // 주문 단건 조회
 //    public OrderResponseDto getOrderId(Long orderId) {
 //
-//    }
 //
+//        return OrderResponseDto.builder()
+//                .id()
+//                .storeId()
+//                .order()
+//                .totalPrice()
+//                .createdAt()
+//                .build();
+//
+//    }
+
 //    // 주문 전체 조회
 //    public List<OrderResponseDto> getOrders() {
 //
