@@ -19,7 +19,10 @@ public class Orders extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
     @Column(name = "total_price")
     private Integer totalPrice;
 

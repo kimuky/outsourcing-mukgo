@@ -16,6 +16,8 @@ public class OrderResponseDto {
 
     private Long id;
 
+    private Long storeId;
+
     private List<OrderDto> order;
 
     private int totalPrice;
