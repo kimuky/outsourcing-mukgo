@@ -37,7 +37,7 @@ public class OrderService {
         for (OrderRequestDto orderRequestDto : orderRequestDtos) {
             // 메뉴 가져오기
             Menu menu = menuRepository.findById(orderRequestDto.getMenuId())
-                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MENU));
+                    .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
 
             Store store = menu.getStore();
             stores.add(store);
@@ -69,17 +69,17 @@ public class OrderService {
     public OrderResponseDto getOrderId(Long orderId) {
         // 주문 Id 확인
         Orders findOrder = orderRepository.findById(orderId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ORDER));
+                .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
         List<OrderMenu> orderMenus = findOrder.getOrderMenu();
         List<OrderDto> orderMenuDtos = new ArrayList<>();
 
         for (OrderMenu orderMenu : orderMenus) {
             String menuName = menuRepository.findById(orderId)
-                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MENU))
+                    .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND))
                     .getMenuName();
             Integer foodCount = orderMenuRepository.findById(new OrderMenuId(orderId, orderMenu.getMenuId().getId()))
-                    .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ORDER))
+                    .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND))
                     .getFoodCount();
             orderMenuDtos.add(new OrderDto(orderMenu.getMenuId().getId(), menuName, foodCount));
         }
@@ -107,10 +107,10 @@ public class OrderService {
 
             for (OrderMenu orderMenu : orderMenus) {
                 String menuName = menuRepository.findById(orderMenu.getMenuId().getId())
-                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_MENU))
+                        .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND))
                         .getMenuName();
                 Integer foodCount = orderMenuRepository.findById(new OrderMenuId(orderMenu.getOrdersId().getId(), orderMenu.getMenuId().getId()))
-                        .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_ORDER))
+                        .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND))
                         .getFoodCount();
                 orderMenuDtos.add(new OrderDto(orderMenu.getMenuId().getId(), menuName, foodCount));
             }
