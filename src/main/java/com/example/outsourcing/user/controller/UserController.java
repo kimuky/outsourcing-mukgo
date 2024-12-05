@@ -23,7 +23,7 @@ public class UserController {
     private final UserService userService;
     // 회원가입
     @PostMapping("/register")
-    public ResponseEntity<UserRegisterResponseDto> registerUser (@RequestBody UserRegisterRequestDto requestDto) {
+    public ResponseEntity<UserRegisterResponseDto> registerUser (@Valid @RequestBody UserRegisterRequestDto requestDto) {
         UserRegisterResponseDto registerUser = userService.registerUser(requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(registerUser);

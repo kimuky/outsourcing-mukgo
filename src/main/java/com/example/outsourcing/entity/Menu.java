@@ -17,7 +17,7 @@ public class Menu extends BaseEntity {
     private Store store;
 
     @Column(nullable = false)
-    private String muneName;
+    private String menuName;
 
     @Column(nullable = false)
     private Integer price;
@@ -28,9 +28,9 @@ public class Menu extends BaseEntity {
     public Menu() {
     }
 
-    public Menu(Store store, String manuName, Integer price, MenuStatus status) {
+    public Menu(Store store, String menuName, Integer price, MenuStatus status) {
         this.store = store;
-        this.muneName = manuName;
+        this.menuName = menuName;
         this.price = price;
         this.status = status;
 

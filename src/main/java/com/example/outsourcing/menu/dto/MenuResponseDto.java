@@ -16,10 +16,10 @@ public class MenuResponseDto {
     private Integer price;
     private MenuStatus status;
 
-    public static MenuResponseDto toMene(Menu menu) {
+    public static MenuResponseDto toMenu(Menu menu) {
         return new MenuResponseDto(
                 menu.getId(),
-                menu.getMuneName(),
+                menu.getMenuName(),
                 menu.getPrice(),
                 menu.getStatus()
         );

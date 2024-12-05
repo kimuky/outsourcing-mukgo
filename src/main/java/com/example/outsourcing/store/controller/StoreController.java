@@ -2,6 +2,7 @@ package com.example.outsourcing.store.controller;
 
 import com.example.outsourcing.entity.Store;
 import com.example.outsourcing.entity.User;
+import com.example.outsourcing.store.dto.StoreMenuResponseDto;
 import com.example.outsourcing.store.dto.StoreRequestDto;
 import com.example.outsourcing.store.dto.StoreResponseDto;
 import com.example.outsourcing.store.repository.StoreRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.service.annotation.GetExchange;
 
 import java.util.List;
 
@@ -73,9 +75,74 @@ public class StoreController {
         return ResponseEntity.ok().body(updateStore);
     }
 
+    /**
+     * 가게 단건 조회
+     * @param storeId
+     * @return
+     */
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreResponseDto> findStore(@PathVariable Long storeId) {
-         return ResponseEntity.ok().body(storeService.findStore(storeId));
+    public ResponseEntity<StoreMenuResponseDto> findStore(@PathVariable Long storeId, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        StoreMenuResponseDto responseDto = storeService.findStore(storeId, loginUser);
+        return ResponseEntity.ok(responseDto);
     }
+
+    /**
+     * 가게 이름 검색 조회
+     * @param name
+     * @return
+     */
+    @GetMapping
+    public ResponseEntity<List<StoreResponseDto>> SearchStoreByName(
+            @RequestParam(value = "name", required = false) String name,
+            HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        List<StoreResponseDto> responseDtoList = storeService.SearchStoreByName(name, loginUser);
+        return ResponseEntity.ok().body(responseDtoList);
+    }
+
+    /**
+     * 가게 폐업 변경
+     * @param storeId
+     * @param request
+     * @return
+     */
+    @PatchMapping("/{storeId}/close")
+    public ResponseEntity<Void> closeStore(@PathVariable Long storeId, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        storeService.closeStore(storeId, loginUser.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * 본인 가게만 조회
+     * @param request
+     * @return
+     */
+    @GetMapping("/my")
+    public ResponseEntity<List<StoreResponseDto>> findMyStore(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        List<StoreResponseDto> responseDtoList = storeService.findMyStore(loginUser);
+        return ResponseEntity.ok(responseDtoList);
+    }
+
 
 }

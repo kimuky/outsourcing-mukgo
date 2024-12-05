@@ -41,7 +41,7 @@ public class AdminController {
 
         StartEndDateTimeDto dateDto = handlingDate(startDate, endDate);
 
-        adminService.getStatics(loginUser, dateDto, storeId);
+//        adminService.getStatics(loginUser, dateDto, storeId);
         return null;
     }
 

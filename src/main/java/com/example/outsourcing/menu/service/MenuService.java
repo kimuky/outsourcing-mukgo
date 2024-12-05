@@ -2,13 +2,11 @@ package com.example.outsourcing.menu.service;
 
 import com.example.outsourcing.entity.Menu;
 import com.example.outsourcing.entity.Store;
-import com.example.outsourcing.entity.User;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
 import com.example.outsourcing.menu.dto.MenuRequestDto;
 import com.example.outsourcing.menu.dto.MenuResponseDto;
-import com.example.outsourcing.menu.repository.MeneRepository;
-import com.example.outsourcing.status.Authority;
+import com.example.outsourcing.menu.repository.MenuRepository;
 import com.example.outsourcing.status.MenuStatus;
 import com.example.outsourcing.store.repository.StoreRepository;
 import lombok.AllArgsConstructor;
@@ -18,7 +16,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class MenuService {
 
-    private final MeneRepository meneRepository;
+    private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
 
     public MenuResponseDto createMenu(Long storeId, Long userid, MenuRequestDto requestDto) {
@@ -36,8 +34,8 @@ public class MenuService {
                 MenuStatus.SELLING
         );
 
-        Menu savedMenu = meneRepository.save(menu);
+        Menu savedMenu = menuRepository.save(menu);
 
-        return MenuResponseDto.toMene(savedMenu);
+        return MenuResponseDto.toMenu(savedMenu);
     }
 }
