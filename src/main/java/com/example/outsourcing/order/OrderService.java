@@ -26,12 +26,16 @@ public class OrderService {
         List<OrderDto> orderMenus = new ArrayList<>();
 
         int totalPrice = 0;
+        List<Store> stores = new ArrayList<>();
 
         // 리스트로 받은 주문들을 하나씩 OrderMenu에 저장
         for (OrderRequestDto orderRequestDto : orderRequestDtos) {
             // 메뉴 가져오기
             Menu menu = menuRepository.findById(orderRequestDto.getMenuId())
                     .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+
+            Store store = menu.getStore();
+            stores.add(store);
 
             totalPrice += menu.getPrice() * orderRequestDto.getCount();
 
@@ -43,10 +47,12 @@ public class OrderService {
             orderMenus.add(orderDto);
         }
 
-        orderRepository.updateTotalPrice(totalPrice, user);
+        orderRepository.updateStore(stores.get(0), savedOrder.getId());
+        orderRepository.updateTotalPrice(totalPrice, savedOrder.getId());
 
         return OrderResponseDto.builder()
                 .id(savedOrder.getId())
+                .storeId(stores.get(0).getId())
                 .order(orderMenus)
                 .totalPrice(totalPrice)
                 .createdAt(savedOrder.getCreatedAt())
