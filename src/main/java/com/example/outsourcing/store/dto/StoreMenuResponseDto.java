@@ -1,6 +1,5 @@
 package com.example.outsourcing.store.dto;
 
-import com.example.outsourcing.entity.Menu;
 import com.example.outsourcing.entity.Store;
 import com.example.outsourcing.menu.dto.MenuResponseDto;
 import com.example.outsourcing.status.StoreStatus;
@@ -12,7 +11,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class StoreResponseDto {
+public class StoreMenuResponseDto {
 
     private Long id;
     private String name;
@@ -20,17 +19,18 @@ public class StoreResponseDto {
     private LocalTime openTime;
     private LocalTime closeTime;
     private StoreStatus status;
+    private List<MenuResponseDto> menus;
 
 
-    public static StoreResponseDto fromStore(Store store) {
-        return new StoreResponseDto(
+    public static StoreMenuResponseDto fromStoreMenu(Store store, List<MenuResponseDto> menus) {
+        return new StoreMenuResponseDto(
                 store.getId(),
                 store.getName(),
                 store.getMinimumAmount(),
                 store.getOpenTime(),
                 store.getCloseTime(),
-                store.getStatus()
+                store.getStatus(),
+                menus
         );
     }
-
 }
