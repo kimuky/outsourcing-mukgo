@@ -18,7 +18,7 @@ public class AdvertisementController {
 
     private final AdvertisementService advertisementService;
 
-    @PostMapping("/{storeId}/advertisement")
+    @PostMapping("/{storeId}/advertisements")
     public ResponseEntity<AdvertisementResponseDto> RequestAdvertisement(@PathVariable Long storeId,
                                                                          @RequestBody AdvertisementRequestDto requestDto,
                                                                          HttpServletRequest servletRequest) {

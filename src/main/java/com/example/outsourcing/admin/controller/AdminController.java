@@ -5,15 +5,13 @@ import com.example.outsourcing.admin.dto.DailyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.MonthlyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
 import com.example.outsourcing.admin.service.AdminService;
+import com.example.outsourcing.advertisement.dto.AdvertisementResponseDto;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -92,6 +90,14 @@ public class AdminController {
         List<BetweenStaticsResponseDto> staticsAll = adminService.getStaticsBetween(storeId, dateDto);
         return ResponseEntity.status(HttpStatus.OK).body(staticsAll);
     }
+
+    @GetMapping("/advertisements")
+    public ResponseEntity<List<?>> getAdvertisementList (@RequestParam(required = false) String status) {
+        List<AdvertisementResponseDto> advertisementList = adminService.getAdvertisementList(status);
+
+        return ResponseEntity.status(HttpStatus.OK).body(advertisementList);
+    }
+
 
     // 날짜를 판별, 예외 핸들링하기 위함
     private StartEndDateTimeDto handlingDate(LocalDate startDate, LocalDate endDate) {

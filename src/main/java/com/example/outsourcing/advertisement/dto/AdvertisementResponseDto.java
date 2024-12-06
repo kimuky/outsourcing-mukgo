@@ -1,12 +1,15 @@
 package com.example.outsourcing.advertisement.dto;
 
 import com.example.outsourcing.entity.Advertisement;
+import com.example.outsourcing.status.AdvertisementStatus;
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
+@RequiredArgsConstructor
 public class AdvertisementResponseDto {
 
     private final Long advertisementId;
@@ -21,6 +24,8 @@ public class AdvertisementResponseDto {
 
     private final LocalDateTime requestDate;
 
+    private final AdvertisementStatus status;
+
     public AdvertisementResponseDto(Advertisement savedAdvertisement) {
         this.advertisementId = savedAdvertisement.getId();
         this.userId = savedAdvertisement.getUser().getId();
@@ -28,5 +33,6 @@ public class AdvertisementResponseDto {
         this.price = savedAdvertisement.getPrice();
         this.contractDate = savedAdvertisement.getContractDate();
         this.requestDate = savedAdvertisement.getCreatedAt();
+        this.status = savedAdvertisement.getAdvertisementStatus();
     }
 }
