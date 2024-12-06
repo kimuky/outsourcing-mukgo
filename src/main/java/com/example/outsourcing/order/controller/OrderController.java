@@ -18,7 +18,7 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
-    // 주문 생성
+    // 주문 생성 처리
     @PostMapping
     public ResponseEntity<OrderResponseDto> postOrder(
             @RequestBody List<OrderRequestDto> orderRequestDtos,
@@ -50,4 +50,8 @@ public class OrderController {
 
         return  ResponseEntity.status(HttpStatus.OK).body(orders);
     }
+
+
+
+
 }

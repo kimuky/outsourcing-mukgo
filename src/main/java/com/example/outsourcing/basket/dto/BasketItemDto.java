@@ -1,16 +1,14 @@
-package com.example.outsourcing.order.dto;
+package com.example.outsourcing.basket.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @AllArgsConstructor
-public class OrderDto {
-
+public class BasketItemDto {
     private Long menuId;
-
-    private String menuName;
-
+    private Long storeId;
     private Integer count;
 }

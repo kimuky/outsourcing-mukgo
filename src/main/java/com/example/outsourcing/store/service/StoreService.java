@@ -173,7 +173,6 @@ public class StoreService {
         } else {
             findStore.setStatus(StoreStatus.OPEN);
         }
-
     }
 
     /**
