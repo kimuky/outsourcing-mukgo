@@ -24,7 +24,14 @@ public class AdvertisementRepositoryImpl {
 
     private final JPAQueryFactory jpaQueryFactory;
 
-    // 광고 테이블의 모든 칼럼을 보여줌
+    /**
+     * 광고 상태, 가게 이름에 따른 동적 쿼리
+     * 광고 상태가 없으면 모든 상태 조회, 가게 이름이 없으면 모든 가게 광고 요청 조회
+     * @param status 광고 상태
+     * @param storeId 가게 이름
+     * @return 광고 id, 유저 id, 가게 id, 광고 요청 가격, 거부 사유,
+     * 요청한 광고 개월 수, 요청한 날, 승인한 날에서 요청 광고 개월수 더한 날짜, 최근 상태 바뀐 날, 상태
+     */
     public List<AdvertisementResponseDto> getAdvertisementList(String status, Long storeId) {
         return jpaQueryFactory.select(
                         Projections.constructor(

@@ -44,6 +44,14 @@ public class AdvertisementController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
+    /**
+     * 사장이 광고 요청한 것을 모두 조회 광고 상태를 넣으면 그에 따른 필터 가능
+     * @param storeId 가게 id
+     * @param status 광고 상태 REQUEST, ADVERTISING, REJECT, END
+     * @param servletRequest 세션
+     * @return 광고 id, 유저 id, 가게 id, 광고 요청 가격, 거부 사유,
+     * 요청한 광고 개월 수, 요청한 날, 승인한 날에서 요청 광고 개월수 더한 날짜, 최근 상태 바뀐 날, 상태
+     */
     @GetMapping("/{storeId}/advertisements")
     public ResponseEntity<List<AdvertisementResponseDto>> getAdvertisementInformation(@PathVariable Long storeId,
                                                                                       @RequestParam(required = false) String status,
