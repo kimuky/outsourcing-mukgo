@@ -1,7 +1,7 @@
 package com.example.outsourcing.advertisement.controller;
 
 import com.example.outsourcing.advertisement.dto.AdvertisementRequestDto;
-import com.example.outsourcing.advertisement.dto.AdvertisementResponseDto;
+import com.example.outsourcing.advertisement.dto.RequestResponseDto;
 import com.example.outsourcing.advertisement.service.AdvertisementService;
 import com.example.outsourcing.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,16 +25,16 @@ public class AdvertisementController {
      * @param storeId 가게 ID
      * @param requestDto 금액, 원하는 달
      * @param servletRequest 세션 확인용
-     * @return 광고 정보 (ID, userId, storeId, price, 광고 계약 날짜, 광고 요청날짜, 광고가 승인난 날짜, 광고 상태)
+     * @return 광고 정보 (ID, userId, storeId, price, 광고 요청날짜, 광고 상태, 요청 달)
      */
     @PostMapping("/{storeId}/advertisements")
-    public ResponseEntity<AdvertisementResponseDto> RequestAdvertisement(@PathVariable Long storeId,
-                                                                         @Valid @RequestBody AdvertisementRequestDto requestDto,
-                                                                         HttpServletRequest servletRequest) {
+    public ResponseEntity<RequestResponseDto> RequestAdvertisement(@PathVariable Long storeId,
+                                                                   @Valid @RequestBody AdvertisementRequestDto requestDto,
+                                                                   HttpServletRequest servletRequest) {
         HttpSession session = servletRequest.getSession(false);
         User loginUser = (User) session.getAttribute("user");
 
-        AdvertisementResponseDto responseDto
+        RequestResponseDto responseDto
                 = advertisementService.RequestAdvertisement(storeId, loginUser.getId(), requestDto);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);

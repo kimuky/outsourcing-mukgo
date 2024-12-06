@@ -1,5 +1,5 @@
 package com.example.outsourcing.status;
 
 public enum AdvertisementStatus {
-    REQUEST, ADVERTISING, END
+    REQUEST, REJECT, ADVERTISING, END
 }

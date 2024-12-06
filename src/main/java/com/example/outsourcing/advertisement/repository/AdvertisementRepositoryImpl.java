@@ -22,17 +22,18 @@ public class AdvertisementRepositoryImpl {
     // 광고 테이블의 모든 칼럼을 보여줌
     public List<AdvertisementResponseDto> getAdvertisementList(String status) {
         return jpaQueryFactory.select(
-                Projections.constructor(
-                        AdvertisementResponseDto.class,
-                        advertisement.id,
-                        advertisement.user.id,
-                        advertisement.store.id,
-                        advertisement.price,
-                        advertisement.contractMonth,
-                        advertisement.createdAt,
-                        advertisement.contractDate,
-                        advertisement.updatedAt,
-                        advertisement.advertisementStatus))
+                        Projections.constructor(
+                                AdvertisementResponseDto.class,
+                                advertisement.id,
+                                advertisement.user.id,
+                                advertisement.store.id,
+                                advertisement.price,
+                                advertisement.rejectComment,
+                                advertisement.contractMonth,
+                                advertisement.createdAt,
+                                advertisement.contractDate,
+                                advertisement.updatedAt,
+                                advertisement.advertisementStatus))
                 .from(advertisement).where(statusEquals(status)).fetch();
     }
 

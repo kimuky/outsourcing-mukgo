@@ -51,4 +51,9 @@ public class Advertisement extends BaseEntity {
         this.advertisementStatus = AdvertisementStatus.ADVERTISING;
         this.contractDate = contractDate;
     }
+
+    public void rejectAdvertisement(String rejectComment) {
+        this.advertisementStatus = AdvertisementStatus.REJECT;
+        this.rejectComment = rejectComment;
+    }
 }

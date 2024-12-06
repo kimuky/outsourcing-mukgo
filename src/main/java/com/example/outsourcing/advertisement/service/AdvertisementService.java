@@ -1,7 +1,7 @@
 package com.example.outsourcing.advertisement.service;
 
 import com.example.outsourcing.advertisement.dto.AdvertisementRequestDto;
-import com.example.outsourcing.advertisement.dto.AdvertisementResponseDto;
+import com.example.outsourcing.advertisement.dto.RequestResponseDto;
 import com.example.outsourcing.advertisement.repository.AdvertisementRepository;
 import com.example.outsourcing.entity.Advertisement;
 import com.example.outsourcing.entity.Store;
@@ -21,8 +21,8 @@ public class AdvertisementService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
 
-    public AdvertisementResponseDto RequestAdvertisement(Long storeId, Long userId,
-                                                         AdvertisementRequestDto requestDto) {
+    public RequestResponseDto RequestAdvertisement(Long storeId, Long userId,
+                                                   AdvertisementRequestDto requestDto) {
         User findUser = userRepository.findUserByIdOrElseThrow(userId);
         Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
@@ -34,6 +34,6 @@ public class AdvertisementService {
         Advertisement advertisement = new Advertisement(findUser, findStore, requestDto);
         Advertisement savedAdvertisement = advertisementRepository.save(advertisement);
 
-        return new AdvertisementResponseDto(savedAdvertisement);
+        return new RequestResponseDto(savedAdvertisement);
     }
 }

@@ -31,6 +31,7 @@ public enum ErrorCode {
     FORBIDDEN_REGISTER(HttpStatus.FORBIDDEN,"이메일이 사용중입니다."),
     FORBIDDEN_LOGIN(HttpStatus.FORBIDDEN,"이미 탈퇴한 유저입니다."),
     FORBIDDEN_APPROVE_ADVERTISEMENT(HttpStatus.FORBIDDEN,"광고 요청만 승인 가능합니다."),
+    FORBIDDEN_REJECT_ADVERTISEMENT(HttpStatus.FORBIDDEN,"광고 요청만 승인 가능합니다."),
 
     // 404 NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND,"리소스를 찾을 수 없습니다."),
