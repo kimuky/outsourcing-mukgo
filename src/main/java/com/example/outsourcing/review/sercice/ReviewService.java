@@ -41,19 +41,21 @@ public class ReviewService {
     }
 
     // 리뷰 조회
-    public List<ReviewResponseDto> getAllReviews(Long storeId) {
+    public List<ReviewResponseDto> getAllReviews(User user, Long storeId, Integer minRating, Integer maxRating) {
 
         Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
-        List<Review> findReviews = reviewRepository.findByStore(findStore);
+        List<Review> findReviews = reviewRepository.findByStore(findStore, user, minRating, maxRating);;
+
+        // 여기부터 리뷰 response dto 만드는 부분
         List<ReviewResponseDto> reviews = new ArrayList<>();
         for (Review review : findReviews) {
             reviews.add(
                     ReviewResponseDto.builder()
-                        .id(review.getId())
-                        .comment(review.getComment())
-                        .rating(review.getRating())
-                        .build()
+                            .id(review.getId())
+                            .comment(review.getComment())
+                            .rating(review.getRating())
+                            .build()
             );
         }
 
