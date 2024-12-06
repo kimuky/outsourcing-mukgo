@@ -2,8 +2,12 @@ package com.example.outsourcing.advertisement.repository;
 
 import com.example.outsourcing.advertisement.dto.AdvertisementResponseDto;
 import com.example.outsourcing.status.AdvertisementStatus;
+import com.example.outsourcing.status.StoreStatus;
+import com.example.outsourcing.store.dto.StoreResponseDto;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -11,6 +15,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 import static com.example.outsourcing.entity.QAdvertisement.advertisement;
+import static com.example.outsourcing.entity.QStore.store;
 
 // 쿼린 DSL 동적으로 쿼리를 작동하게 하기 위함
 @Repository
@@ -62,4 +67,26 @@ public class AdvertisementRepositoryImpl {
         }
         return false;
     }
+
+    public List<StoreResponseDto> findByStoreNameAndAdvertisement(String name) {
+        return jpaQueryFactory.select(
+                Projections.constructor(
+                        StoreResponseDto.class,
+                        store.id,
+                        store.name,
+                        store.minimumAmount,
+                        store.openTime,
+                        store.closeTime,
+                        store.status)
+                )
+                .from(store)
+                .leftJoin(store.advertisements, advertisement)
+                .where(store.name.like("%" + name + "%"), store.status.eq(StoreStatus.OPEN))
+                .orderBy(priorityAdvertising.asc(), advertisement.price.desc(), advertisement.contractMonth.desc()).fetch();
+    }
+
+    NumberExpression<Integer> priorityAdvertising = new CaseBuilder()
+            .when(advertisement.advertisementStatus.eq(AdvertisementStatus.ADVERTISING)).then(1)
+            .otherwise(2);
+
 }
