@@ -18,6 +18,7 @@ public enum ErrorCode {
     OPEN_AND_CLOSE(HttpStatus.BAD_REQUEST,"마감시간이 오픈시간보다 빠를 순 없습니다."),
     BAD_REQUEST_YEAR_MONTH(HttpStatus.BAD_REQUEST,"연도 혹은 달을 잘못 입력하셨습니다."),
     BAD_REQUEST_YEAR_MONTH_DAY(HttpStatus.BAD_REQUEST,"적어도 내일 날짜를 입력해주세요."),
+    BAD_REQUEST_ADVERTISEMENT(HttpStatus.BAD_REQUEST,"광고는 가게당 1개만 활성화 시킬 수 있습니다."),
     
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
@@ -41,7 +42,6 @@ public enum ErrorCode {
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
     USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 아이디가 일치하지 않습니다."),
     USER_PASSWORD_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 패스워드가 일치하지 않습니다."),
-    NOT_FOUND_USER(HttpStatus.NOT_FOUND,"USER_NOT_FOUND로 수정해주세요"),
     ADVERTISEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "광고를 찾을 수 없습니다."),
 
     // 409 CONFLICT

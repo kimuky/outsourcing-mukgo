@@ -64,7 +64,7 @@ public class UserService {
     @Transactional
     public void deleteUser(Long userId, @Valid UserPasswordRequestDto requestDto) {
         User findUser = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_USER));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         if (findUser.getStatus().equals(UserStatus.DEACTIVATED)) {
             throw new CustomException(ErrorCode.FORBIDDEN_LOGIN);
