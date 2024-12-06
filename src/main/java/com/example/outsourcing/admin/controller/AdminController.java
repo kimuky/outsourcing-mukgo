@@ -102,8 +102,9 @@ public class AdminController {
      * @return 광고 id, 사장님 id, 가게 id, 광고 요청 가격, 광고 기간, 광고 요청 일자, 광고 승인 날짜, 상태
      */
     @GetMapping("/advertisements")
-    public ResponseEntity<List<AdvertisementResponseDto>> getAdvertisementList (@RequestParam(required = false) String status) {
-        List<AdvertisementResponseDto> advertisementList = adminService.getAdvertisementList(status);
+    public ResponseEntity<List<AdvertisementResponseDto>> getAdvertisementList (@RequestParam(required = false) String status,
+                                                                                @RequestParam(required = false) Long storeId) {
+        List<AdvertisementResponseDto> advertisementList = adminService.getAdvertisementList(status, storeId);
 
         return ResponseEntity.status(HttpStatus.OK).body(advertisementList);
     }

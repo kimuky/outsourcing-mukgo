@@ -20,7 +20,7 @@ public class AdvertisementRepositoryImpl {
     private final JPAQueryFactory jpaQueryFactory;
 
     // 광고 테이블의 모든 칼럼을 보여줌
-    public List<AdvertisementResponseDto> getAdvertisementList(String status) {
+    public List<AdvertisementResponseDto> getAdvertisementList(String status, Long storeId) {
         return jpaQueryFactory.select(
                         Projections.constructor(
                                 AdvertisementResponseDto.class,
@@ -34,7 +34,7 @@ public class AdvertisementRepositoryImpl {
                                 advertisement.contractDate,
                                 advertisement.updatedAt,
                                 advertisement.advertisementStatus))
-                .from(advertisement).where(statusEquals(status)).fetch();
+                .from(advertisement).where(statusEquals(status), StoreEquals(storeId)).fetch();
     }
 
     // 상태 파라미터에 따른 동적으로 쿼리를 추가 혹은 제외
@@ -43,6 +43,14 @@ public class AdvertisementRepositoryImpl {
             return null;
         }
         return advertisement.advertisementStatus.eq(AdvertisementStatus.valueOf(status));
+    }
+
+    // 가게 id 여부에 따른 동적 쿼리 수행
+    private BooleanExpression StoreEquals(Long storeId) {
+        if (storeId == null) {
+            return null;
+        }
+        return advertisement.store.id.eq(storeId);
     }
 
     // ENUM 처리를 위함 만약 ENUM 외의 값을 입력하면 모든 광고 리스트를 보여줌

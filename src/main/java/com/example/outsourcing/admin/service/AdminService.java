@@ -42,8 +42,8 @@ public class AdminService {
         return userRepositoryImpl.getStaticsBetween(storeId, dateDto);
     }
 
-    public List<AdvertisementResponseDto> getAdvertisementList(String status) {
-        return advertisementRepositoryImpl.getAdvertisementList(status);
+    public List<AdvertisementResponseDto> getAdvertisementList(String status, Long storeId) {
+        return advertisementRepositoryImpl.getAdvertisementList(status, storeId);
     }
 
     @Transactional
