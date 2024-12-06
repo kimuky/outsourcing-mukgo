@@ -7,13 +7,12 @@ import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
 import com.example.outsourcing.status.StoreStatus;
 import com.example.outsourcing.store.dto.StoreResponseDto;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface StoreRepository extends JpaRepository<Store, Long> {

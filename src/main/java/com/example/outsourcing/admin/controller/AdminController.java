@@ -5,15 +5,17 @@ import com.example.outsourcing.admin.dto.DailyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.MonthlyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
 import com.example.outsourcing.admin.service.AdminService;
+import com.example.outsourcing.advertisement.dto.AdvertisementResponseDto;
+import com.example.outsourcing.advertisement.dto.ApproveResponseDto;
+import com.example.outsourcing.advertisement.dto.RejectResponseDto;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -91,6 +93,49 @@ public class AdminController {
 
         List<BetweenStaticsResponseDto> staticsAll = adminService.getStaticsBetween(storeId, dateDto);
         return ResponseEntity.status(HttpStatus.OK).body(staticsAll);
+    }
+
+    /**
+     * 광고 리스트를 볼 수 있음, 요청 상태 파라미터 (REQUEST, ADVERTISING, END)
+     * 입력하지 않으면 전체 리스트를 볼 수 있음.
+     * @param status ENUM(REQUEST, ADVERTISING, END)
+     * @return 광고 id, 사장님 id, 가게 id, 광고 요청 가격, 광고 기간, 광고 요청 일자, 광고 승인 날짜, 상태
+     */
+    @GetMapping("/advertisements")
+    public ResponseEntity<List<AdvertisementResponseDto>> getAdvertisementList (@RequestParam(required = false) String status,
+                                                                                @RequestParam(required = false) Long storeId) {
+        List<AdvertisementResponseDto> advertisementList = adminService.getAdvertisementList(status, storeId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(advertisementList);
+    }
+
+    /**
+     * 광고 승인이 가능
+     * @param advertisementId 광고 id
+     * @return 광고 id, 유저 id, 가게 id, 요청했던 달, 광고 요청 일자, 광고 가능 기간, 광고 스인 일자, 광고 상태
+     */
+    @PatchMapping("/advertisements/{advertisementId}/approve")
+    public ResponseEntity<ApproveResponseDto> approveAdvertisement (@PathVariable Long advertisementId) {
+        ApproveResponseDto responseDto = adminService.approveAdvertisement(advertisementId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
+
+    /**
+     * 관리자는 사장님들이 요청한 광고를 거절
+     * @param advertisementId 광고 ID
+     * @param rejectComment 거절 사유 (10자 이상)
+     * @return 광고 ID, 유저 ID, 가게 ID, 요청 날짜, 광고 상태, 거절 사유, 거절 날짜
+     */
+    @Validated
+    @PatchMapping("/advertisements/{advertisementId}/reject")
+    public ResponseEntity<RejectResponseDto> rejectAdvertisement (
+            @PathVariable Long advertisementId,
+            @RequestParam
+            @Size(min = 10, message = "거절 코멘트는 10자 이상 작성해주세요") String rejectComment) {
+        RejectResponseDto responseDto = adminService.rejectAdvertisement(advertisementId, rejectComment);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
     }
 
     // 날짜를 판별, 예외 핸들링하기 위함

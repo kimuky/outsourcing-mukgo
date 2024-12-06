@@ -2,7 +2,6 @@ package com.example.outsourcing.entity;
 
 import com.example.outsourcing.status.StoreStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -40,6 +39,9 @@ public class Store extends BaseEntity {
 
     @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Menu> menus = new ArrayList<>();
+
+    @OneToMany(mappedBy = "store", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<Advertisement> advertisements = new ArrayList<>();
 
     public Store(User user, String name, Integer minimumAmount, LocalTime openTime, LocalTime closeTime) {
         this.user = user;

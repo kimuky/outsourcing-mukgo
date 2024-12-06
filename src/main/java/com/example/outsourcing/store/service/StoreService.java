@@ -1,5 +1,6 @@
 package com.example.outsourcing.store.service;
 
+import com.example.outsourcing.advertisement.repository.AdvertisementRepositoryImpl;
 import com.example.outsourcing.entity.Menu;
 import com.example.outsourcing.entity.Store;
 import com.example.outsourcing.entity.User;
@@ -28,6 +29,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     public final UserRepository userRepository;
+    private final AdvertisementRepositoryImpl advertisementRepositoryImpl;
 
     /**
      * 가게 생성
@@ -134,7 +136,7 @@ public class StoreService {
 
 
     /**
-     * 가게 이름 검색 조회
+     * 가게 이름 검색 조회 + 광고 우선 순위
      * @param name
      * @return
      */
@@ -144,7 +146,10 @@ public class StoreService {
             return storeRepository.findByStoreAndNotUser(name, loginUser.getId());
         }
 
-        return storeRepository.findByStoreAndUser(name);
+        // 광고 구현했을 때, 광고 우선순위 검색
+        return advertisementRepositoryImpl.findByStoreNameAndAdvertisement(name);
+
+//        return storeRepository.findByStoreAndUser(name); -> 광고 구현을 안했을 시, 기존 검색
     }
 
     /**
