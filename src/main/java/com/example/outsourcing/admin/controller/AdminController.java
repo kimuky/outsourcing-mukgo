@@ -5,6 +5,7 @@ import com.example.outsourcing.admin.dto.DailyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.MonthlyStaticsResponseDto;
 import com.example.outsourcing.admin.dto.StartEndDateTimeDto;
 import com.example.outsourcing.admin.service.AdminService;
+import com.example.outsourcing.advertisement.dto.AdvertisementApproveResponseDto;
 import com.example.outsourcing.advertisement.dto.AdvertisementResponseDto;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
@@ -91,6 +92,12 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(staticsAll);
     }
 
+    /**
+     * 광고 리스트를 볼 수 있음, 요청 상태 파라미터 (REQUEST, ADVERTISING, END)
+     * 입력하지 않으면 전체 리스트를 볼 수 있음.
+     * @param status ENUM(REQUEST, ADVERTISING, END)
+     * @return 광고 id, 사장님 id, 가게 id, 광고 요청 가격, 광고 기간, 광고 요청 일자, 광고 승인 날짜, 상태
+     */
     @GetMapping("/advertisements")
     public ResponseEntity<List<AdvertisementResponseDto>> getAdvertisementList (@RequestParam(required = false) String status) {
         List<AdvertisementResponseDto> advertisementList = adminService.getAdvertisementList(status);
@@ -98,6 +105,17 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.OK).body(advertisementList);
     }
 
+    /**
+     * 광고 승인이 가능
+     * @param advertisementId 광고 id
+     * @return 광고 id, 유저 id, 가게 id, 요청했던 달, 광고 요청 일자, 광고 가능 기간, 광고 스인 일자, 광고 상태
+     */
+    @PatchMapping("/advertisements/{advertisementId}/approve")
+    public ResponseEntity<AdvertisementApproveResponseDto> approveAdvertisement (@PathVariable Long advertisementId) {
+        AdvertisementApproveResponseDto responseDto = adminService.approveAdvertisement(advertisementId);
+
+        return ResponseEntity.status(HttpStatus.OK).body(responseDto);
+    }
 
     // 날짜를 판별, 예외 핸들링하기 위함
     private StartEndDateTimeDto handlingDate(LocalDate startDate, LocalDate endDate) {

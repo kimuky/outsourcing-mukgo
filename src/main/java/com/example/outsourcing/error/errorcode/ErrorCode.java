@@ -30,6 +30,7 @@ public enum ErrorCode {
     FORBIDDEN_OWNER(HttpStatus.FORBIDDEN,"본인의 가게가 아닙니다."),
     FORBIDDEN_REGISTER(HttpStatus.FORBIDDEN,"이메일이 사용중입니다."),
     FORBIDDEN_LOGIN(HttpStatus.FORBIDDEN,"이미 탈퇴한 유저입니다."),
+    FORBIDDEN_APPROVE_ADVERTISEMENT(HttpStatus.FORBIDDEN,"광고 요청만 승인 가능합니다."),
 
     // 404 NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND,"리소스를 찾을 수 없습니다."),
@@ -40,6 +41,7 @@ public enum ErrorCode {
     USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 아이디가 일치하지 않습니다."),
     USER_PASSWORD_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 패스워드가 일치하지 않습니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND,"USER_NOT_FOUND로 수정해주세요"),
+    ADVERTISEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "광고를 찾을 수 없습니다."),
 
     // 409 CONFLICT
     DUPLICATE_USER_ID(HttpStatus.CONFLICT, "중복된 아이디입니다."),

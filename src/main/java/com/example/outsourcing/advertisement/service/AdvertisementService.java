@@ -26,6 +26,7 @@ public class AdvertisementService {
         User findUser = userRepository.findUserByIdOrElseThrow(userId);
         Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
+        // 가게 사장님과 사장님을 비교하여 해당 가게의 사장님이 맞는지 확인
         if (!findStore.getUser().getId().equals(findUser.getId())) {
             throw new CustomException(ErrorCode.FORBIDDEN_OWNER);
         }

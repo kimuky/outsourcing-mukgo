@@ -6,7 +6,7 @@ import com.example.outsourcing.status.AdvertisementStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity(name = "advertisement")
@@ -28,7 +28,9 @@ public class Advertisement extends BaseEntity {
 
     private String rejectComment;
 
-    private LocalDate contractDate;
+    private Integer contractMonth;
+
+    private LocalDateTime contractDate;
 
     @Enumerated(EnumType.STRING)
     private AdvertisementStatus advertisementStatus;
@@ -37,11 +39,16 @@ public class Advertisement extends BaseEntity {
         this.user = findUser;
         this.store = findStore;
         this.price = requestDto.getPrice();
-        this.contractDate = requestDto.getContractDate();
+        this.contractMonth = requestDto.getMonth();
         this.advertisementStatus = AdvertisementStatus.REQUEST;
     }
 
     public Advertisement() {
 
+    }
+
+    public void approveAdvertisement(LocalDateTime contractDate) {
+        this.advertisementStatus = AdvertisementStatus.ADVERTISING;
+        this.contractDate = contractDate;
     }
 }
