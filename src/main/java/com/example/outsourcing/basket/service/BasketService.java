@@ -93,7 +93,7 @@ public class BasketService {
         List<Store> stores = new ArrayList<>();
 
         if (basket.isEmpty()) {
-            throw new CustomException(ErrorCode.NOT_FOUND);
+            throw new CustomException(ErrorCode.EMPTY_BASKET);
         }
 
         // 주문 생성
@@ -102,15 +102,15 @@ public class BasketService {
 
         for (BasketItemDto basketItem : basket) {
             Menu menu = menuRepository.findByMenuOrElseThrow(basketItem.getMenuId());
+
             Store store = menu.getStore();
             stores.add(store);
 
-
-            orderMenuRepository.test(savedOrder.getId(), menu.getId(), basketItem.getCount());
+            orderMenuRepository.insertOrderMenu(savedOrder.getId(), menu.getId(), basketItem.getCount());
 
         }
-        List<OrderDto> ordersList = orderMenuRepository.test2(savedOrder.getId());
-        Integer totalPrice = ((BigDecimal) orderMenuRepository.test3(savedOrder.getId())).intValue();
+        List<OrderDto> ordersList = orderMenuRepository.getOrderMenus(savedOrder.getId());
+        Integer totalPrice = ((BigDecimal) orderMenuRepository.findTotalPrice(savedOrder.getId())).intValue();
 
 
         // 총 가격 업데이트

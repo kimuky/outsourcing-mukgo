@@ -20,6 +20,7 @@ public enum ErrorCode {
     NOT_DELIVERING_COMPLETED(HttpStatus.BAD_REQUEST, "배달이 완료되지 않았습니다."),
     UNDER_MINIMUM_AMOUNT(HttpStatus.BAD_REQUEST, "주문 최소금액을 만족해야 합니다."),
     NOT_OPEN_TIME(HttpStatus.BAD_REQUEST, "가게 오픈 시간이 아닙니다."),
+    EMPTY_BASKET(HttpStatus.BAD_REQUEST,"바구니가 비어있습니다."),
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
