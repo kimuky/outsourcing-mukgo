@@ -92,7 +92,7 @@ public class AdminController {
     }
 
     @GetMapping("/advertisements")
-    public ResponseEntity<List<?>> getAdvertisementList (@RequestParam(required = false) String status) {
+    public ResponseEntity<List<AdvertisementResponseDto>> getAdvertisementList (@RequestParam(required = false) String status) {
         List<AdvertisementResponseDto> advertisementList = adminService.getAdvertisementList(status);
 
         return ResponseEntity.status(HttpStatus.OK).body(advertisementList);

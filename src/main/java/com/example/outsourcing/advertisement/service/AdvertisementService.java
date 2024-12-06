@@ -21,7 +21,8 @@ public class AdvertisementService {
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
 
-    public AdvertisementResponseDto RequestAdvertisement(Long storeId, Long userId, AdvertisementRequestDto requestDto) {
+    public AdvertisementResponseDto RequestAdvertisement(Long storeId, Long userId,
+                                                         AdvertisementRequestDto requestDto) {
         User findUser = userRepository.findUserByIdOrElseThrow(userId);
         Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
