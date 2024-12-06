@@ -10,10 +10,9 @@ import com.example.outsourcing.store.service.StoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.service.annotation.GetExchange;
+
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class StoreController {
             @PathVariable Long storeId,
             HttpServletRequest request) {
 
-        Store findStore = storeRepository.findByOrElseThrow(storeId);
+        Store findStore = storeRepository.findByStoreOrElseThrow(storeId);
 
         HttpSession session = request.getSession(false);
         //login 되어있는 user data
@@ -81,22 +80,68 @@ public class StoreController {
      * @return
      */
     @GetMapping("/{storeId}")
-    public ResponseEntity<StoreMenuResponseDto> findStore(@PathVariable Long storeId) {
+    public ResponseEntity<StoreMenuResponseDto> findStore(@PathVariable Long storeId, HttpServletRequest request) {
 
-        StoreMenuResponseDto responseDto = storeService.findStore(storeId);
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        StoreMenuResponseDto responseDto = storeService.findStore(storeId, loginUser);
         return ResponseEntity.ok(responseDto);
     }
 
-
+    /**
+     * 가게 이름 검색 조회
+     * @param name
+     * @return
+     */
     @GetMapping
     public ResponseEntity<List<StoreResponseDto>> SearchStoreByName(
-            @RequestParam(value = "name", required = false) String name
+            @RequestParam(value = "name", required = false) String name,
+            HttpServletRequest request
     ) {
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
 
-        List<StoreResponseDto> responseDtoList = storeService.SearchStoreByName(name);
+        List<StoreResponseDto> responseDtoList = storeService.SearchStoreByName(name, loginUser);
         return ResponseEntity.ok().body(responseDtoList);
     }
 
+    /**
+     * 가게 폐업 변경
+     * @param storeId
+     * @param request
+     * @return
+     */
+    @PatchMapping("/{storeId}/close")
+    public ResponseEntity<Void> closeStore(@PathVariable Long storeId, HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        storeService.closeStore(storeId, loginUser.getId());
+
+        return ResponseEntity.ok().build();
+    }
+
+
+    /**
+     * 본인 가게만 조회
+     * @param request
+     * @return
+     */
+    @GetMapping("/my")
+    public ResponseEntity<List<StoreResponseDto>> findMyStore(HttpServletRequest request) {
+
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        List<StoreResponseDto> responseDtoList = storeService.findMyStore(loginUser);
+        return ResponseEntity.ok(responseDtoList);
+    }
 
 
 }

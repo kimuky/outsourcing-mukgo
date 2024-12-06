@@ -19,15 +19,17 @@ public class Orders extends BaseEntity{
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @Column(nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "store_id")
+    private Store store;
+
     @Column(name = "total_price")
     private Integer totalPrice;
 
     @Enumerated(EnumType.STRING)
     private OrderStep step;
 
-    @OneToMany
-    @JoinColumn(name = "order_menu_id")
+    @OneToMany(mappedBy = "ordersId", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<OrderMenu> orderMenu = new ArrayList<>();
 
     public Orders() {

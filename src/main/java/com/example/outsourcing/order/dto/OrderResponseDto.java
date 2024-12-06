@@ -1,4 +1,4 @@
-package com.example.outsourcing.order;
+package com.example.outsourcing.order.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +15,8 @@ import java.util.List;
 public class OrderResponseDto {
 
     private Long id;
+
+    private Long storeId;
 
     private List<OrderDto> order;
 
