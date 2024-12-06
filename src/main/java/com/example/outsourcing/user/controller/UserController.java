@@ -29,16 +29,30 @@ public class UserController {
 
     // 로그인
     @PostMapping("/login")
-    public ResponseEntity<UserLoginResponseDto> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto,
-                                                           HttpServletRequest servletRequest) {
-        User loginUser = userService.loginUser(requestDto);
-
+    public ResponseEntity<UserResponseDto> loginUser (@Valid @RequestBody UserLoginRequestDto requestDto,
+                                                      HttpServletRequest servletRequest) {
+        User user = userService.loginUser(requestDto);
         HttpSession session = servletRequest.getSession();
-        session.setAttribute("user", loginUser);
+        session.setAttribute("user", user);
 
-        UserLoginResponseDto loginResponseDto
-                = new UserLoginResponseDto(loginUser.getId(), loginUser.getEmail(), "로그인되었습니다.");
+        UserResponseDto loginResponseDto
+                = new UserResponseDto(user.getId(), user.getEmail(), "로그인되었습니다.");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
+    }
+
+    // 회원 탈퇴
+    @DeleteMapping
+    public ResponseEntity<UserResponseDto> deleteUser (@Valid @RequestBody UserPasswordRequestDto requestDto,
+                                                            HttpServletRequest servletRequest) {
+        HttpSession session = servletRequest.getSession(false);
+        User loginUser = (User) session.getAttribute("user");
+
+        userService.deleteUser(loginUser.getId(), requestDto);
+
+        UserResponseDto loginResponseDto
+                = new UserResponseDto(loginUser.getId(), loginUser.getEmail(), "탈퇴 처리 되었습니다");
+
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(loginResponseDto);
     }
 }

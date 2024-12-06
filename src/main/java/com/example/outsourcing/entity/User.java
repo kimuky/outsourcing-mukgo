@@ -4,7 +4,6 @@ import com.example.outsourcing.status.Authority;
 import com.example.outsourcing.status.UserStatus;
 import com.example.outsourcing.user.dto.UserRegisterRequestDto;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.Getter;
 
 @Getter
@@ -42,7 +41,7 @@ public class User extends BaseEntity {
     }
 
     // 회원 탈퇴 상태로 변경
-    public void deactivate() {
+    public void updateDeactivatedStatus() {
         this.status = UserStatus.DEACTIVATED;
     }
 }
