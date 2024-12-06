@@ -136,7 +136,7 @@ public class StoreService {
 
 
     /**
-     * 가게 이름 검색 조회
+     * 가게 이름 검색 조회 + 광고 우선 순위
      * @param name
      * @return
      */
@@ -146,7 +146,7 @@ public class StoreService {
             return storeRepository.findByStoreAndNotUser(name, loginUser.getId());
         }
 
-        // 광고 구현했을 때, 우선순위 검색
+        // 광고 구현했을 때, 광고 우선순위 검색
         return advertisementRepositoryImpl.findByStoreNameAndAdvertisement(name);
 
 //        return storeRepository.findByStoreAndUser(name); -> 광고 구현을 안했을 시, 기존 검색

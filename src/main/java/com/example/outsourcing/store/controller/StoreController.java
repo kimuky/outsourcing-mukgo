@@ -91,8 +91,8 @@ public class StoreController {
     }
 
     /**
-     * 가게 이름 검색 조회
-     * @param name
+     * 가게 이름 검색 조회 + 광고 우선순위 검색
+     * @param name 가게 이름
      * @return
      */
     @GetMapping

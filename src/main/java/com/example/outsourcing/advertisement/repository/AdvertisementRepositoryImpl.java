@@ -68,6 +68,13 @@ public class AdvertisementRepositoryImpl {
         return false;
     }
 
+    /**
+     * 가게와 광고를 leftjoin 하여 가게와 연결된 광고를 찾고, 가게 이름 검색에 따른 가게가 조회가 되는데
+     * 정렬 순은 광고중 인가? (ADVERTISING 제외하곤 우선순위 같음)
+     * -> 광고 금액이 큰가? -> 계약한 달이 긴가?
+     * @param name 가게 이름
+     * @return 가게 아이디, 가게 이름, 가게 최소 주문금액, 오픈시간, 마감 시간, 가게 오픈 상태
+     */
     public List<StoreResponseDto> findByStoreNameAndAdvertisement(String name) {
         return jpaQueryFactory.select(
                 Projections.constructor(
@@ -85,6 +92,7 @@ public class AdvertisementRepositoryImpl {
                 .orderBy(priorityAdvertising.asc(), advertisement.price.desc(), advertisement.contractMonth.desc()).fetch();
     }
 
+    // ADVERTISING 제외하곤 우선순위 동일
     NumberExpression<Integer> priorityAdvertising = new CaseBuilder()
             .when(advertisement.advertisementStatus.eq(AdvertisementStatus.ADVERTISING)).then(1)
             .otherwise(2);
