@@ -12,5 +12,5 @@ public class OrderDto {
 
     private String menuName;
 
-    private int count;
+    private Integer count;
 }
