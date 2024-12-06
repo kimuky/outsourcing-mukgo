@@ -17,7 +17,8 @@ public enum ErrorCode {
     NOT_CREATE_STORE(HttpStatus.BAD_REQUEST, "개인당 가게는 최대 3개입니다."),
     OPEN_AND_CLOSE(HttpStatus.BAD_REQUEST,"마감시간이 오픈시간보다 빠를 순 없습니다."),
     BAD_REQUEST_YEAR_MONTH(HttpStatus.BAD_REQUEST,"연도 혹은 달을 잘못 입력하셨습니다."),
-    
+    NOT_DELIVERING_COMPLETED(HttpStatus.BAD_REQUEST, "배달이 완료되지 않았습니다"),
+
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
     UNAUTHORIZED_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 틀렸습니다."),
@@ -29,6 +30,7 @@ public enum ErrorCode {
     FORBIDDEN_OWNER(HttpStatus.FORBIDDEN,"본인의 가게가 아닙니다."),
     FORBIDDEN_REGISTER(HttpStatus.FORBIDDEN,"이메일이 사용중입니다."),
     FORBIDDEN_LOGIN(HttpStatus.FORBIDDEN,"이미 탈퇴한 유저입니다."),
+    FORBIDDEN_ORDER(HttpStatus.FORBIDDEN, "사용자가 주문하지 않은 주문입니다."),
 
     // 404 NOT_FOUND
     NOT_FOUND(HttpStatus.NOT_FOUND,"리소스를 찾을 수 없습니다."),
