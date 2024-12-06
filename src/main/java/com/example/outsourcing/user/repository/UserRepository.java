@@ -3,7 +3,10 @@ package com.example.outsourcing.user.repository;
 import com.example.outsourcing.entity.User;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
+import com.example.outsourcing.status.UserStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,13 +26,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
         }
     }
 
-    default List<User> findUser (String email, String password) {
-        return findUserByEmailAndPassword(email, password);
-    }
-
     Optional<User> findUserByEmail(String email);
 
-    List<User> findUserByEmailAndPassword(String email, String password);
+    List<User> findUserByEmailAndStatus( String email, UserStatus userStatus);
 }
 
 
