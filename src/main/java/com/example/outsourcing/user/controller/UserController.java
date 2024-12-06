@@ -2,10 +2,7 @@ package com.example.outsourcing.user.controller;
 
 
 import com.example.outsourcing.entity.User;
-import com.example.outsourcing.user.dto.UserLoginRequestDto;
-import com.example.outsourcing.user.dto.UserLoginResponseDto;
-import com.example.outsourcing.user.dto.UserRegisterRequestDto;
-import com.example.outsourcing.user.dto.UserRegisterResponseDto;
+import com.example.outsourcing.user.dto.*;
 import com.example.outsourcing.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -21,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+
     // 회원가입
     @PostMapping("/register")
     public ResponseEntity<UserRegisterResponseDto> registerUser (@Valid @RequestBody UserRegisterRequestDto requestDto) {
@@ -43,7 +41,4 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(loginResponseDto);
     }
-
-
-
 }
