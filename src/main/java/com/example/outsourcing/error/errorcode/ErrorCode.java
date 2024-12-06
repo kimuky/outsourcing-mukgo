@@ -49,13 +49,14 @@ public enum ErrorCode {
     USER_ID_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 아이디가 일치하지 않습니다."),
     USER_PASSWORD_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자 패스워드가 일치하지 않습니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND,"USER_NOT_FOUND로 수정해주세요"),
+    ADVERTISEMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "광고를 찾을 수 없음"),
 
     // 409 CONFLICT
     DUPLICATE_USER_ID(HttpStatus.CONFLICT, "중복된 아이디입니다."),
-    USER_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 탈퇴한 사용자 아이디입니다.")
+    USER_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 탈퇴한 사용자 아이디입니다."),
 
-    ;
 
+;
 
     private final HttpStatus httpStatus;
     private final String detail;
