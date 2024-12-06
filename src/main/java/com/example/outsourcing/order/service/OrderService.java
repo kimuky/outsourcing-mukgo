@@ -13,6 +13,7 @@ import com.example.outsourcing.status.OrderStep;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,12 +27,14 @@ public class OrderService {
     // 주문 생성
     public OrderResponseDto postOrder(User user, List<OrderRequestDto> orderRequestDtos) {
 
+        LocalTime now = LocalTime.now();
         Orders order = new Orders(user, OrderStep.ORDER_COMPLETED);
         Orders savedOrder = orderRepository.save(order);
         List<OrderDto> orderMenus = new ArrayList<>();
 
         int totalPrice = 0;
-        List<Store> stores = new ArrayList<>();
+        Store orderStore = menuRepository.findById(orderRequestDtos.get(0).getMenuId())
+                .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND)).getStore();
 
         // 리스트로 받은 주문들을 하나씩 OrderMenu에 저장
         for (OrderRequestDto orderRequestDto : orderRequestDtos) {
@@ -40,24 +43,37 @@ public class OrderService {
                     .orElseThrow(() -> new CustomException(ErrorCode.MENU_NOT_FOUND));
 
             Store store = menu.getStore();
-            stores.add(store);
+
+            // 오픈시간이 아닐때 예외
+            if (now.isBefore(store.getOpenTime()) || now.isAfter(store.getCloseTime())) {
+                throw new CustomException(ErrorCode.NOT_OPEN_TIME);
+            }
+
+            if (!store.getId().equals(orderStore.getId())) {
+                throw new CustomException(ErrorCode.STORE_NOT_FOUND);
+            }
 
             totalPrice += menu.getPrice() * orderRequestDto.getCount();
 
             OrderMenuId orderMenuId = new OrderMenuId(savedOrder.getId(), orderRequestDto.getMenuId());
             OrderMenu orderMenu = new OrderMenu(orderMenuId, savedOrder, menu, orderRequestDto.getCount());
-
             OrderMenu savedOrderMenu = orderMenuRepository.save(orderMenu);
+
             OrderDto orderDto = new OrderDto(savedOrderMenu.getMenuId().getId(), savedOrderMenu.getMenuId().getMenuName(), savedOrderMenu.getFoodCount());
             orderMenus.add(orderDto);
         }
 
-        orderRepository.updateStore(stores.get(0), savedOrder.getId());
+        // 주문 최소 금액 안 맞출 때 예외
+        if (totalPrice < orderStore.getMinimumAmount()) {
+            throw new CustomException(ErrorCode.UNDER_MINIMUM_AMOUNT);
+        }
+
+        orderRepository.updateStore(orderStore, savedOrder.getId());
         orderRepository.updateTotalPrice(totalPrice, savedOrder.getId());
 
         return OrderResponseDto.builder()
                 .id(savedOrder.getId())
-                .storeId(stores.get(0).getId())
+                .storeId(orderStore.getId())
                 .order(orderMenus)
                 .totalPrice(totalPrice)
                 .createdAt(savedOrder.getCreatedAt())

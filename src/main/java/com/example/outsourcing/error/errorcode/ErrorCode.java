@@ -17,7 +17,9 @@ public enum ErrorCode {
     NOT_CREATE_STORE(HttpStatus.BAD_REQUEST, "개인당 가게는 최대 3개입니다."),
     OPEN_AND_CLOSE(HttpStatus.BAD_REQUEST,"마감시간이 오픈시간보다 빠를 순 없습니다."),
     BAD_REQUEST_YEAR_MONTH(HttpStatus.BAD_REQUEST,"연도 혹은 달을 잘못 입력하셨습니다."),
-    NOT_DELIVERING_COMPLETED(HttpStatus.BAD_REQUEST, "배달이 완료되지 않았습니다"),
+    NOT_DELIVERING_COMPLETED(HttpStatus.BAD_REQUEST, "배달이 완료되지 않았습니다."),
+    UNDER_MINIMUM_AMOUNT(HttpStatus.BAD_REQUEST, "주문 최소금액을 만족해야 합니다."),
+    NOT_OPEN_TIME(HttpStatus.BAD_REQUEST, "가게 오픈 시간이 아닙니다."),
 
     // 401 Unauthorized
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "인증이 필요합니다."),
