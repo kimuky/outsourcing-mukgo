@@ -1,14 +1,12 @@
 package com.example.outsourcing.basket.controller;
 
 import com.example.outsourcing.basket.dto.BasketItemDto;
-import com.example.outsourcing.basket.dto.BasketResponseDto;
 import com.example.outsourcing.basket.service.BasketService;
 import com.example.outsourcing.entity.User;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
 import com.example.outsourcing.order.dto.OrderRequestDto;
 import com.example.outsourcing.order.dto.OrderResponseDto;
-import com.example.outsourcing.order.service.OrderService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -56,8 +54,6 @@ public class BasketController {
 
         List<BasketItemDto> basketItem = basketService.addBasket(requestDto, basketCookie, response);
 
-//        BasketResponseDto basketResponseDto = BasketResponseDto.fromBasket(basketItem);
-
         return ResponseEntity.status(HttpStatus.OK).body(basketItem);
     }
 
@@ -86,5 +82,32 @@ public class BasketController {
 
         OrderResponseDto orderResponseDto = basketService.basketOrder(loginUser, basketCookie, response);
         return ResponseEntity.status(HttpStatus.OK).body(orderResponseDto);
+    }
+
+    /**
+     * 사용자 현재 사용 중인 장바구니 조회
+     * @param userId
+     * @param basketCookie
+     * @param request
+     * @return
+     */
+    @GetMapping("/{userId}/baskets")
+    public ResponseEntity<List<BasketItemDto>> getBasket(
+            @PathVariable Long userId,
+            @CookieValue(value = "basket", required = false) Cookie basketCookie,
+            HttpServletRequest request) {
+
+        // 로그인된 사용자 확인
+        HttpSession session = request.getSession(false);
+        User loginUser = (User) session.getAttribute("user");
+
+        // 로그인된 사용자와 URL의 사용자 ID가 일치하는지 확인
+        if (loginUser == null || !loginUser.getId().equals(userId)) {
+            throw new CustomException(ErrorCode.FORBIDDEN_PERMISSION);
+        }
+
+        // 장바구니 데이터 반환
+        List<BasketItemDto> basket = basketService.findByBasket(basketCookie);
+        return ResponseEntity.ok(basket);
     }
 }
