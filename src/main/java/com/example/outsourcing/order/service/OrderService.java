@@ -12,6 +12,7 @@ import com.example.outsourcing.order.repository.OrderRepository;
 import com.example.outsourcing.status.OrderStep;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ public class OrderService {
     private MenuRepository menuRepository;
 
     // 주문 생성
+    @Transactional
     public OrderResponseDto postOrder(User user, List<OrderRequestDto> orderRequestDtos) {
 
         LocalTime now = LocalTime.now();
@@ -76,6 +78,7 @@ public class OrderService {
                 .storeId(orderStore.getId())
                 .order(orderMenus)
                 .totalPrice(totalPrice)
+                .orderStep(OrderStep.ORDER_COMPLETED)
                 .createdAt(savedOrder.getCreatedAt())
                 .build();
 
@@ -105,6 +108,7 @@ public class OrderService {
                 .storeId(findOrder.getStore().getId())
                 .order(orderMenuDtos)
                 .totalPrice(findOrder.getTotalPrice())
+                .orderStep(OrderStep.ORDER_COMPLETED)
                 .createdAt(findOrder.getCreatedAt())
                 .build();
 
@@ -136,6 +140,7 @@ public class OrderService {
                     .storeId(order.getStore().getId())
                     .order(orderMenuDtos)
                     .totalPrice(order.getTotalPrice())
+                    .orderStep(OrderStep.ORDER_COMPLETED)
                     .createdAt(order.getCreatedAt())
                     .build();
             orderResponseDtos.add(orderResponseDto);

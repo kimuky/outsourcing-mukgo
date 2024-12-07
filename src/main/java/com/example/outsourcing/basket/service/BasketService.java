@@ -1,7 +1,6 @@
 package com.example.outsourcing.basket.service;
 
 import com.example.outsourcing.basket.dto.BasketItemDto;
-import com.example.outsourcing.basket.dto.BasketResponseDto;
 import com.example.outsourcing.entity.*;
 import com.example.outsourcing.error.errorcode.ErrorCode;
 import com.example.outsourcing.error.exception.CustomException;
@@ -12,14 +11,12 @@ import com.example.outsourcing.order.dto.OrderResponseDto;
 import com.example.outsourcing.order.repository.OrderMenuRepository;
 import com.example.outsourcing.order.repository.OrderRepository;
 import com.example.outsourcing.status.OrderStep;
-import com.example.outsourcing.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,9 +24,9 @@ import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -64,14 +61,27 @@ public class BasketService {
             basket.clear();
         }
 
-        //장바구니에 메뉴 넣기
-        BasketItemDto basketItem = new BasketItemDto(
-                menu.getId(),
-                menu.getStore().getId(),
-                requestDto.getCount()
-        );
+        // 같은 메뉴가 있는지 확인
+        boolean itemExists = false;
+        for (BasketItemDto item : basket) {
+            if (item.getMenuId().equals(menu.getId())) {
+                // 같은 메뉴가 있을 경우 수량 증가
+                item.setCount(item.getCount() + requestDto.getCount());
+                itemExists = true;
+                break;
+            }
+        }
 
-        basket.add(basketItem);
+        // 같은 메뉴가 없을 경우 새 항목 추가
+        if (!itemExists) {
+            BasketItemDto basketItem = new BasketItemDto(
+                    menu.getId(),
+                    menu.getStore().getId(),
+                    requestDto.getCount()
+            );
+            basket.add(basketItem);
+        }
+
         //쿠키에 저장
         saveBasketToCookie(basket, response);
 
@@ -91,6 +101,7 @@ public class BasketService {
 
         List<BasketItemDto> basket = parseBasketFromCookie(basketCookie);
         List<Store> stores = new ArrayList<>();
+        LocalTime now = LocalTime.now();
 
         if (basket.isEmpty()) {
             throw new CustomException(ErrorCode.EMPTY_BASKET);
@@ -105,6 +116,11 @@ public class BasketService {
 
             Store store = menu.getStore();
             stores.add(store);
+
+            // 오픈시간이 아닐때 예외
+            if (now.isBefore(store.getOpenTime()) || now.isAfter(store.getCloseTime())) {
+                throw new CustomException(ErrorCode.NOT_OPEN_TIME);
+            }
 
             orderMenuRepository.insertOrderMenu(savedOrder.getId(), menu.getId(), basketItem.getCount());
 
@@ -124,10 +140,25 @@ public class BasketService {
                 .storeId(basket.get(0).getStoreId())
                 .order(ordersList)
                 .totalPrice(totalPrice)
+                .orderStep(OrderStep.ORDER_COMPLETED)
                 .createdAt(savedOrder.getCreatedAt())
                 .build();
 
     }
+
+    /**
+     * 사용자 현재 사용 중인 장바구니 조회
+     * @param basketCookie
+     * @return
+     */
+    public List<BasketItemDto> findByBasket(Cookie basketCookie) {
+
+        List<BasketItemDto> basket = parseBasketFromCookie(basketCookie);
+
+        return basket;
+    }
+
+
 
 
 
