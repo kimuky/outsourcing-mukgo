@@ -33,8 +33,13 @@ public class UserService {
             throw new CustomException(ErrorCode.FORBIDDEN_REGISTER);
         }
 
-        // 이메일 중복 검사
-        userRepository.findUserByEmailForDuplicateCheck(requestDto.getEmail());
+        // 이메일 중복 검사 (수정 전)
+        // userRepository.findUserByEmailForDuplicateCheck(requestDto.getEmail());
+
+        // 이메일 중복 검사 (수정 후)
+        if(userRepository.existsUserByEmail(requestDto.getEmail())){
+            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
+        }
 
         // 패스워드 인코딩
         String encodedPassword = passwordEncoder.encode(requestDto.getPassword());
