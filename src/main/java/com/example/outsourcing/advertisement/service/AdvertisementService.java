@@ -14,8 +14,10 @@ import com.example.outsourcing.status.AdvertisementStatus;
 import com.example.outsourcing.store.repository.StoreRepository;
 import com.example.outsourcing.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -26,6 +28,13 @@ public class AdvertisementService {
     private final AdvertisementRepositoryImpl advertisementRepositoryImpl;
     private final UserRepository userRepository;
     private final StoreRepository storeRepository;
+
+    @Scheduled(cron = "0 0 12 * * *")
+    public void ExpiredAdvertisements() {
+        LocalDateTime currentTime = LocalDateTime.now();
+
+        advertisementRepository.ExpiredAdvertisements(currentTime);
+    }
 
     public RequestResponseDto RequestAdvertisement(Long storeId, Long userId,
                                                    AdvertisementRequestDto requestDto) {
