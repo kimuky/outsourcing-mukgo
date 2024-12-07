@@ -7,11 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
-import java.util.Objects;
+
 
 public interface OrderMenuRepository extends JpaRepository<OrderMenu, OrderMenuId> {
 
@@ -26,7 +25,5 @@ public interface OrderMenuRepository extends JpaRepository<OrderMenu, OrderMenuI
 
     @Query(value = "SELECT SUM(m.price * om.food_count) FROM order_menu om inner join menu m on om.menu_id = m.id WHERE om.orders_Id = :orders_id ", nativeQuery = true)
     Object findTotalPrice(@Param("orders_id") Long orders_id);
-
-
 
 }
