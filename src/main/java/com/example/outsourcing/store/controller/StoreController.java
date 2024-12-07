@@ -2,6 +2,7 @@ package com.example.outsourcing.store.controller;
 
 import com.example.outsourcing.entity.Store;
 import com.example.outsourcing.entity.User;
+import com.example.outsourcing.order.dto.OrderResponseDto;
 import com.example.outsourcing.store.dto.StoreMenuResponseDto;
 import com.example.outsourcing.store.dto.StoreRequestDto;
 import com.example.outsourcing.store.dto.StoreResponseDto;
@@ -143,5 +144,45 @@ public class StoreController {
         return ResponseEntity.ok(responseDtoList);
     }
 
+    /**
+     * 가게 주문 조회
+     * @param storeId
+     * @param request
+     * @return
+     */
+    @GetMapping("/{storeId}/orders")
+    public ResponseEntity<List<OrderResponseDto>> checkOrderStore(
+            @PathVariable Long storeId,
+            HttpServletRequest request) {
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        List<OrderResponseDto> orders = storeService.checkOrderStore(storeId, loginUser);
+
+        return ResponseEntity.ok().body(orders);
+    }
+
+    /**
+     * 주문 상태 변경
+     * @param storeId
+     * @param orderId
+     * @param request
+     * @return
+     */
+    @PatchMapping("/{storeId}/orders/{orderId}")
+    public ResponseEntity<OrderResponseDto> updateOrderStatus(
+            @PathVariable Long storeId,
+            @PathVariable Long orderId,
+            HttpServletRequest request
+    ) {
+        HttpSession session = request.getSession(false);
+        //login 되어있는 user data
+        User loginUser = (User) session.getAttribute("user");
+
+        OrderResponseDto orderStatus = storeService.updateOrderStatus(storeId, orderId, loginUser);
+
+        return ResponseEntity.ok().body(orderStatus);
+    }
 
 }

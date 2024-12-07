@@ -3,6 +3,7 @@ package com.example.outsourcing.entity;
 import com.example.outsourcing.status.OrderStep;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class Orders extends BaseEntity{
     @Column(name = "total_price")
     private Integer totalPrice;
 
+    @Setter
     @Enumerated(EnumType.STRING)
     private OrderStep step;
 
