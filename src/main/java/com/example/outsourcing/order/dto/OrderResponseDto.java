@@ -1,5 +1,6 @@
 package com.example.outsourcing.order.dto;
 
+import com.example.outsourcing.status.OrderStep;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,8 @@ public class OrderResponseDto {
     private List<OrderDto> order;
 
     private int totalPrice;
+
+    private OrderStep orderStep;
 
     private LocalDateTime createdAt;
 

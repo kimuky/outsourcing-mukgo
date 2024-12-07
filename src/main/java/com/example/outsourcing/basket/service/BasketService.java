@@ -140,6 +140,7 @@ public class BasketService {
                 .storeId(basket.get(0).getStoreId())
                 .order(ordersList)
                 .totalPrice(totalPrice)
+                .orderStep(OrderStep.ORDER_COMPLETED)
                 .createdAt(savedOrder.getCreatedAt())
                 .build();
 
