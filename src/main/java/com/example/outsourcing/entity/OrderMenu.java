@@ -12,7 +12,7 @@ public class OrderMenu extends BaseEntity {
 
     @MapsId("ordersId")
     @ManyToOne
-    @JoinColumn(name = "orders_Id")
+    @JoinColumn(name = "orders_Id", insertable = false, updatable = false)
     private Orders ordersId;
 
     @MapsId("menuId")
@@ -24,5 +24,12 @@ public class OrderMenu extends BaseEntity {
     private Integer foodCount;
 
     public OrderMenu() {
+    }
+
+    public OrderMenu(OrderMenuId id, Orders ordersId, Menu menuId, Integer foodCount) {
+        this.id = id;
+        this.ordersId = ordersId;
+        this.menuId = menuId;
+        this.foodCount = foodCount;
     }
 }
